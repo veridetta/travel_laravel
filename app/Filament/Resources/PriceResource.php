@@ -33,13 +33,16 @@ class PriceResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('price_dewasa')
                     ->required()
-                    ->numeric(),
+                    ->label('Harga Dewasa')
+                    ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
                 Forms\Components\TextInput::make('price_anak')
                     ->required()
-                    ->numeric(),
+                    ->label('Harga Anak')
+                    ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
                 Forms\Components\TextInput::make('price_bayi')
                     ->required()
-                    ->numeric(),
+                    ->label('Harga Bayi')
+                    ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
             ]);
     }
 
@@ -47,17 +50,14 @@ class PriceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('travel_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('price_dewasa')
-                    ->numeric()
+                    ->currency('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price_anak')
-                    ->numeric()
+                    ->currency('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('price_bayi')
-                    ->numeric()
+                    ->currency('IDR')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -104,4 +104,5 @@ class PriceResource extends Resource
         ];
     }
     */
+
 }

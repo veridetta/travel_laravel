@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Price extends Model
 {
     use HasFactory;
-    public function course(): BelongsTo
+    public function travel(): BelongsTo
     {
         return $this->belongsTo(Travel::class);
     }

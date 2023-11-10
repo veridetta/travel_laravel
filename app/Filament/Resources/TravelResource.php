@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\HotelResource\Pages\CreateHotel;
+use App\Filament\Resources\HotelResource\Pages\EditHotel;
+use App\Filament\Resources\HotelResource\Pages\ListHotels;
 use App\Filament\Resources\PriceResource\Pages\CreatePrice;
 use App\Filament\Resources\PriceResource\Pages\EditPrice;
 use App\Filament\Resources\PriceResource\Pages\ListPrices;
@@ -13,11 +16,13 @@ use App\Filament\Resources\TravelResource\RelationManagers;
 use App\Models\Maskapai;
 use App\Models\Travel;
 use App\Models\TravelBanner;
+use App\Models\Hotel;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -91,6 +96,12 @@ class TravelResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('seat')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('prices.price_dewasa')
+                ->currency('IDR')
+                ->color(fn (string $state): string => match ($state) {
+                    $state => 'success',
+                })
+                ->icon('heroicon-s-currency-dollar'),
                 Tables\Columns\TextColumn::make('departure'),
                 Tables\Columns\TextColumn::make('flight')
                     ->searchable(),
@@ -123,7 +134,7 @@ class TravelResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('Atur Banner')
+                Action::make('Tambah Banner')
                     ->color('success')
                     ->icon('heroicon-m-photo')
                     ->url(
@@ -139,7 +150,15 @@ class TravelResource extends Resource
                             'parent' => $record->id,
                         ])
                     ),
-            ])
+                Action::make('Tambah Hotel')
+                    ->color('danger')
+                    ->icon('heroicon-m-building-office-2')
+                    ->url(
+                        fn (Travel $record): string => static::getUrl('hotels.index', [
+                            'parent' => $record->id,
+                        ])
+                        ),
+            ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -169,6 +188,10 @@ class TravelResource extends Resource
             'prices.index' => ListPrices::route('/{parent}/prices'),
             'prices.create' => CreatePrice::route('/{parent}/prices/create'),
             'prices.edit' =>EditPrice::route('/{parent}/prices/{record}/edit'),
+            //hotels
+            'hotels.index' => ListHotels::route('/{parent}/hotels'),
+            'hotels.create' => CreateHotel::route('/{parent}/hotels/create'),
+            'hotels.edit' =>EditHotel::route('/{parent}/hotels/{record}/edit'),
 
         ];
     }

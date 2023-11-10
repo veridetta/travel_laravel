@@ -7,7 +7,7 @@ $navbarDetached = ($navbarDetached ?? '');
   <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
     <a href="{{url('/')}}" class="app-brand-link gap-2">
       <span class="app-brand-logo" style="width:30px !important; height:30px !important">
-        <img src="{{$profile->server}}storage/{{$profile->logo}}" alt="Brand Logo" class="img-fluid">
+        <img src="{{$profile->credentials->server}}storage/{{$profile->logo}}" alt="Brand Logo" class="img-fluid">
       </span>
       <span class="app-brand-text demo menu-text fw-bold">{{$profile->website_name}}</span>
     </a>

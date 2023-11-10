@@ -117,5 +117,8 @@ return array(
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'BladeUI\\Icons\\' => array($vendorDir . '/blade-ui-kit/blade-icons/src'),
     'BladeUI\\Heroicons\\' => array($vendorDir . '/blade-ui-kit/blade-heroicons/src'),
+    'Ariaieboy\\FilamentCurrency\\Database\\Factories\\' => array($vendorDir . '/ariaieboy/filament-currency/database/factories'),
+    'Ariaieboy\\FilamentCurrency\\' => array($vendorDir . '/ariaieboy/filament-currency/src'),
     'App\\' => array($baseDir . '/app', $vendorDir . '/laravel/pint/app'),
+    'Akaunting\\Money\\' => array($vendorDir . '/akaunting/laravel-money/src'),
 );

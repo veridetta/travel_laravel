@@ -13,6 +13,7 @@ use App\Models\Kelebihan;
 use App\Models\Page;
 use App\Models\Pokja;
 use App\Models\Profile;
+use App\Models\Setting;
 use App\Models\SideBanner;
 use App\Models\TopBanner;
 use App\Models\Travel;
@@ -40,6 +41,10 @@ class Controller extends BaseController
       $footerData = Footer::get();
       // Inisialisasi array untuk menyimpan title dari setiap footer
       $footerTitles = [];
+      $credentials = Setting::first();
+      //gabungkan credentials dan profile
+      $profile = $about;
+      $profile->credentials = $credentials;
 
       // Iterasi melalui setiap baris data footer
       foreach ($footerData as $footer) {
