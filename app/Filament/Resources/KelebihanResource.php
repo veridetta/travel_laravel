@@ -35,7 +35,7 @@ class KelebihanResource extends Resource
                     ->maxLength(255),
                 Forms\Components\RichEditor::make('description')
                     ->required()
-                    ->maxLength(255),
+                    ->columnSpanFull(),
             ]);
     }
 

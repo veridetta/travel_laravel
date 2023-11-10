@@ -6,10 +6,9 @@ $navbarDetached = ($navbarDetached ?? '');
 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
   <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
     <a href="{{url('/')}}" class="app-brand-link gap-2">
-      <span class="app-brand-logo" style="width:30px !important; height:30px !important">
+      <span class="app-brand-logo" style="width:141px !important; height:30px !important">
         <img src="{{$profile->credentials->server}}storage/{{$profile->logo}}" alt="Brand Logo" class="img-fluid">
       </span>
-      <span class="app-brand-text demo menu-text fw-bold">{{$profile->website_name}}</span>
     </a>
   </div>
   <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0   d-xl-none ">
@@ -18,42 +17,39 @@ $navbarDetached = ($navbarDetached ?? '');
     </a>
   </div>
 
-
   <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-    <!-- Search -->
-    <div class="navbar-nav align-items-center">
-      <div class="nav-item navbar-search-wrapper mb-0">
-        <a class="nav-item nav-link search-toggler d-flex align-items-center px-0" href="javascript:void(0);">
-          <i class="ti ti-search ti-md me-2"></i>
-          <span class="d-none d-md-inline-block text-muted">Search (Ctrl+/)</span>
-        </a>
-      </div>
-    </div>
-    <!-- /Search -->
-
-
-
-
 
     <ul class="navbar-nav flex-row align-items-center ms-auto">
       <!-- Notification -->
       <li class="nav-item me-3 me-xl-1">
         <a class="nav-link " href="javascript:void(0);" aria-expanded="false">
-          <i class="ti ti-ti-crown ti-md"></i>
-          <span>Paket Umroh</span>
+          <i class="text-warning fa fa-mosque fa-md"></i>
+          <span class="text-warning">Paket Umroh</span>
         </a>
       </li>
+      @if(!Auth::user())
+        <li class="nav-item me-3 me-xl-1">
+          <a class="nav-link btn btn-outline-warning" href="#">
+            <span class="align-middle text-warning">MASUK</span>
+          </a>
+        </li>
+        <li class="nav-item me-3 me-xl-1">
+          <a class="nav-link btn btn-warning" href="pages-pricing.html">
+            <span class="align-middle text-white">DAFTAR</span>
+          </a>
+        </li>
+        @endif
       <!--/ Notification -->
 
       <!-- User -->
-      <li class="nav-item navbar-dropdown dropdown-user dropdown">
-        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-          <div class="avatar avatar-online">
-            <img src="https://ui-avatars.com/api/?name={{ Auth::user() ? Auth::user()->name : 'Guest' }}?background=0D8ABC&color=fff" alt="" class="h-auto rounded-circle">
-          </div>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
           @if(Auth::user())
+          <li class="nav-item navbar-dropdown dropdown-user dropdown">
+            <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+              <div class="avatar avatar-online">
+                <img src="https://ui-avatars.com/api/?name={{ Auth::user() ? Auth::user()->name : 'Guest' }}?background=0D8ABC&color=fff" alt="" class="h-auto rounded-circle">
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
             <li>
               <a class="dropdown-item" href="pages-account-settings-account.html">
                 <div class="d-flex">
@@ -92,21 +88,9 @@ $navbarDetached = ($navbarDetached ?? '');
                 </span>
               </a>
             </li>
-          @else
-            <li>
-              <a class="dropdown-item" href="#">
-                <i class="ti ti-share me-2 ti-sm"></i>
-                <span class="align-middle">MASUK</span>
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="pages-pricing.html">
-                <i class="ti ti-person me-2 ti-sm"></i>
-                <span class="align-middle">DAFTAR</span>
-              </a>
-            </li>
+          </ul>
           @endif
-        </ul>
+
       </li>
       <!--/ User -->
 

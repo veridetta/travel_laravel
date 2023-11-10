@@ -3,8 +3,7 @@
   <div class="d-flex">
     <div class="col-3 p-3">
       <div class="d-flex">
-        <img class="" height="50px" width="50px" src="{{$profile->server}}storage/{{$profile->logo}}" alt="Logo">
-      <p class="h2 my-auto ms-2">{{$profile->website_name}}</p>
+        <img class="" height="40px" width="166px" src="{{$profile->credentials->server}}storage/{{$profile->logo}}" alt="Logo">
       </div>
       <div class="">
         <div class="d-flex align-items-center">

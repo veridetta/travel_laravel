@@ -24,6 +24,14 @@ class Travel extends Model
     {
         return $this->hasMany(Hotel::class,'travel_id');
     }
+    public function plans(): HasMany
+    {
+        return $this->hasMany(Plan::class,'travel_id');
+    }
+    public function syarats(): HasMany
+    {
+        return $this->hasMany(Syarat::class,'travel_id');
+    }
     protected static function booted()
     {
         parent::booted();

@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '37e34aaaf30e4b9a8b31b8c1b2ae88093c4e7b25',
+        'reference' => '7ed19e772e2565a8e3dca10c79a15d5e15ae15f3',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -319,6 +319,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'ibrahimbougaoua/filament-rating-star' => array(
+            'pretty_version' => 'v0.0.1',
+            'version' => '0.0.1.0',
+            'reference' => '585e23a5bf4cb636462070f5d834918f45bf652e',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ibrahimbougaoua/filament-rating-star',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'illuminate/auth' => array(
             'dev_requirement' => false,
             'replaced' => array(
@@ -544,7 +553,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '37e34aaaf30e4b9a8b31b8c1b2ae88093c4e7b25',
+            'reference' => '7ed19e772e2565a8e3dca10c79a15d5e15ae15f3',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

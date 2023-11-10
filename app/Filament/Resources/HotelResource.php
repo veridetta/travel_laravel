@@ -6,10 +6,15 @@ use App\Filament\Resources\HotelResource\Pages;
 use App\Filament\Resources\HotelResource\RelationManagers;
 use App\Models\Hotel;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
+use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStarColumn;
+use IbrahimBougaoua\FilamentRatingStar\Columns\RatingStarColumn as ColumnsRatingStarColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -50,11 +55,24 @@ class HotelResource extends Resource
                 Forms\Components\RichEditor::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('stars')
-                    ->numeric(),
-                Forms\Components\TextInput::make('room_type')
-                    ->maxLength(255),
+                RatingStar::make('stars')
+                    ->label('Bintang')
+                    ->columnSpanFull(),
+                Select::make('room_type')
+                    ->label('Tipe Kamar')
+                    ->options(
+                        [
+                            'Single' => 'Single',
+                            'Double' => 'Double',
+                            'Twin' => 'Twin',
+                            'Triple' => 'Triple',
+                            'Quad' => 'Quad'
+                        ],
+                    )
+                    ->required(),
                 Forms\Components\TextInput::make('room_capacity')
+                    ->label('Kapasitas Kamar')
+                    ->required()
                     ->numeric(),
             ]);
     }
@@ -72,13 +90,15 @@ class HotelResource extends Resource
                 Tables\Columns\ImageColumn::make('image')
                     ->label('Gambar'),
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('stars')
-                    ->numeric()
-                    ->sortable(),
+                    ->limit(50)
+                    ->html(),
+                    TextColumn::make('stars')
+                    ->label('Bintang'),
                 Tables\Columns\TextColumn::make('room_type')
+                    ->label('Tipe Kamar')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('room_capacity')
+                    ->label('Kapasitas Kamar')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

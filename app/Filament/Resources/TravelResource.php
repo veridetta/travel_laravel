@@ -5,9 +5,15 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\HotelResource\Pages\CreateHotel;
 use App\Filament\Resources\HotelResource\Pages\EditHotel;
 use App\Filament\Resources\HotelResource\Pages\ListHotels;
+use App\Filament\Resources\PlanResource\Pages\CreatePlan;
+use App\Filament\Resources\PlanResource\Pages\EditPlan;
+use App\Filament\Resources\PlanResource\Pages\ListPlans;
 use App\Filament\Resources\PriceResource\Pages\CreatePrice;
 use App\Filament\Resources\PriceResource\Pages\EditPrice;
 use App\Filament\Resources\PriceResource\Pages\ListPrices;
+use App\Filament\Resources\SyaratResource\Pages\CreateSyarat;
+use App\Filament\Resources\SyaratResource\Pages\EditSyarat;
+use App\Filament\Resources\SyaratResource\Pages\ListSyarats;
 use App\Filament\Resources\TravelBannerResource\Pages\CreateTravelBanner;
 use App\Filament\Resources\TravelBannerResource\Pages\EditTravelBanner;
 use App\Filament\Resources\TravelBannerResource\Pages\ListTravelBanners;
@@ -18,10 +24,12 @@ use App\Models\Travel;
 use App\Models\TravelBanner;
 use App\Models\Hotel;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,6 +59,22 @@ class TravelResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                    Select::make('category')
+                ->label('Kategori')
+                ->options(
+                  [
+                     //Reguler, Plus Wisata, Haji Furoda, Badal Haji, Ramadhan, Haji Plus, Haji Mandiri, Haji Expatriat
+                    'Reguler' => 'Reguler',
+                    'Plus Wisata' => 'Plus Wisata',
+                    'Haji Furoda' => 'Haji Furoda',
+                    'Badal Haji' => 'Badal Haji',
+                    'Ramadhan'=>'Ramadhan',
+                    'Haji Plus'=>'Haji Plus',
+                    'Haji Mandiri'=>'Haji Mandiri',
+                    'Haji Expatriat'=>'Haji Expatriat'
+                  ]
+                  )
+                  ->required(),
                 Forms\Components\TextInput::make('seat')
                     ->required()
                     ->label('Jumlah Seat')
@@ -67,14 +91,23 @@ class TravelResource extends Resource
                     ->label('Dari')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('duration')
+                Forms\Components\Select::make('duration')
                     ->label('Durasi')
                     ->required()
-                    ->maxLength(255),
+                    ->options(
+                      [
+                        //9,10,11,12
+                        '9' => '9',
+                        '10' => '10',
+                        '11' => '11',
+                        '12' => '12'
+                      ]
+                    ),
                 Forms\Components\Select::make('maskapai')
                     ->label('Pilih Maskapai')
                     ->options(Maskapai::all()->pluck('name', 'id'))
                     ->searchable()
+                    ->multiple()
                     ->columnSpanFull()
                     ->required(),
                 Forms\Components\RichEditor::make('include')
@@ -93,6 +126,22 @@ class TravelResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\SelectColumn::make('category')
+                ->label('Kategori')
+                ->options(
+                  [
+                     //Reguler, Plus Wisata, Haji Furoda, Badal Haji, Ramadhan, Haji Plus, Haji Mandiri, Haji Expatriat
+                    'Reguler' => 'Reguler',
+                    'Plus Wisata' => 'Plus Wisata',
+                    'Haji Furoda' => 'Haji Furoda',
+                    'Badal Haji' => 'Badal Haji',
+                    'Ramadhan'=>'Ramadhan',
+                    'Haji Plus'=>'Haji Plus',
+                    'Haji Mandiri'=>'Haji Mandiri',
+                    'Haji Expatriat'=>'Haji Expatriat'
+                  ]
+                  )
                     ->searchable(),
                 Tables\Columns\TextColumn::make('seat')
                     ->searchable(),
@@ -158,6 +207,22 @@ class TravelResource extends Resource
                             'parent' => $record->id,
                         ])
                         ),
+                Action::make('Buat Planning')
+                    ->color('primary')
+                    ->icon('heroicon-m-paper-airplane')
+                    ->url(
+                        fn (Travel $record): string => static::getUrl('plans.index', [
+                            'parent' => $record->id,
+                        ])
+                        ),
+                Action::make('Tambahkan Syarat')
+                        ->color('secondary')
+                        ->icon('heroicon-m-wrench-screwdriver')
+                        ->url(
+                            fn (Travel $record): string => static::getUrl('syarats.index', [
+                                'parent' => $record->id,
+                            ])
+                            )
             ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -192,6 +257,14 @@ class TravelResource extends Resource
             'hotels.index' => ListHotels::route('/{parent}/hotels'),
             'hotels.create' => CreateHotel::route('/{parent}/hotels/create'),
             'hotels.edit' =>EditHotel::route('/{parent}/hotels/{record}/edit'),
+            //plans
+            'plans.index' => ListPlans::route('/{parent}/plans'),
+            'plans.create' => CreatePlan::route('/{parent}/plans/create'),
+            'plans.edit' =>EditPlan::route('/{parent}/plans/{record}/edit'),
+            //syarats
+            'syarats.index' => ListSyarats::route('/{parent}/syarats'),
+            'syarats.create' => CreateSyarat::route('/{parent}/syarats/create'),
+            'syarats.edit' =>EditSyarat::route('/{parent}/syarats/{record}/edit'),
 
         ];
     }

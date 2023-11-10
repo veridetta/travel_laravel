@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('city');
             $table->string('image');
-            $table->string('description');
+            $table->text('description');
             $table->timestamps();
         });
     }

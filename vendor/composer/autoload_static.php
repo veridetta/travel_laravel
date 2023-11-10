@@ -24,20 +24,20 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '9261e07cd92c53dcc971c7c88c176c04' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/helpers.php',
         '9720327d09ed9a4ba00c9b5071b71c7d' => __DIR__ . '/..' . '/danharrin/date-format-converter/src/standards.php',
-        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '2ad94ea6f6f6013119e9abcf4e302a08' => __DIR__ . '/..' . '/filament/forms/src/helpers.php',
-        '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
+        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'b69d5f1f95cd1ed438c038b6cbcc45b5' => __DIR__ . '/..' . '/filament/notifications/src/Testing/Autoload.php',
+        '3bd81c9b8fcc150b69d8b63b4d2ccf23' => __DIR__ . '/..' . '/spatie/flare-client-php/src/helpers.php',
         '35a6ad97d21e794e7e22a17d806652e4' => __DIR__ . '/..' . '/nunomaduro/termwind/src/Functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '09f6b20656683369174dd6fa83b7e5fb' => __DIR__ . '/..' . '/symfony/polyfill-uuid/bootstrap.php',
         'eee56a36884c3af04e64bac85043e771' => __DIR__ . '/..' . '/akaunting/laravel-money/src/helpers.php',
+        '89e9938b64b06cc502d7ceca69a380fe' => __DIR__ . '/..' . '/filament/filament/src/global_helpers.php',
+        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '47e1160838b5e5a10346ac4084b58c23' => __DIR__ . '/..' . '/laravel/prompts/src/helpers.php',
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         '801c31d8ed748cfa537fa45402288c95' => __DIR__ . '/..' . '/psy/psysh/src/functions.php',
         'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
-        '89e9938b64b06cc502d7ceca69a380fe' => __DIR__ . '/..' . '/filament/filament/src/global_helpers.php',
-        'ebb446bb6d02e998480945fbbb73dc64' => __DIR__ . '/..' . '/filament/filament/src/helpers.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '265b4faa2b3a9766332744949e83bf97' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Collections/helpers.php',
         'c7a3c339e7e14b60e06a2d7fcce9476b' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Events/functions.php',
@@ -162,6 +162,8 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         array (
             'Illuminate\\Support\\' => 19,
             'Illuminate\\' => 11,
+            'IbrahimBougaoua\\FilamentRatingStar\\Database\\Factories\\' => 54,
+            'IbrahimBougaoua\\FilamentRatingStar\\' => 35,
         ),
         'G' => 
         array (
@@ -536,6 +538,14 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'Illuminate\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate',
+        ),
+        'IbrahimBougaoua\\FilamentRatingStar\\Database\\Factories\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/database/factories',
+        ),
+        'IbrahimBougaoua\\FilamentRatingStar\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src',
         ),
         'GuzzleHttp\\UriTemplate\\' => 
         array (
@@ -2915,6 +2925,13 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\Actions\\RatingStar' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/Actions/RatingStar.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\Actions\\RatingStarColumn' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/Actions/RatingStarColumn.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\Columns\\RatingStarColumn' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/Columns/RatingStarColumn.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\Commands\\FilamentRatingStarCommand' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/Commands/FilamentRatingStarCommand.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\Facades\\FilamentRatingStar' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/Facades/FilamentRatingStar.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\FilamentRatingStar' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/FilamentRatingStar.php',
+        'IbrahimBougaoua\\FilamentRatingStar\\FilamentRatingStarServiceProvider' => __DIR__ . '/..' . '/ibrahimbougaoua/filament-rating-star/src/FilamentRatingStarServiceProvider.php',
         'Illuminate\\Auth\\Access\\AuthorizationException' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/AuthorizationException.php',
         'Illuminate\\Auth\\Access\\Events\\GateEvaluated' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Events/GateEvaluated.php',
         'Illuminate\\Auth\\Access\\Gate' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Auth/Access/Gate.php',

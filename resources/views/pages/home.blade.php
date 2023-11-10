@@ -41,6 +41,25 @@
 @section('page-script')
 <script src="{{asset('assets/js/ui-carousel.js')}}"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+   $("#btnCari").click(function(){
+    var lokasi = $("#lokasi").val();
+    if(lokasi=="Semua Lokasi"){
+      lokasi = "semua";
+    }else{
+      lokasi = lokasi.replace(/\s/g, "-");
+    }
+    var waktu = $("#waktu").val();
+    if(waktu=="Semua Waktu"){
+      waktu = "semua";
+    }else{
+      waktu = waktu.replace(/\s/g, "-");
+    }
+    var biaya = $("#biaya").val();
+    var url = "/cari-paket/semua/"+waktu+"/"+lokasi+"/segera?price="+biaya+"&duration=semua";
+    window.location.href = url;
+  });
+</script>
 @endsection
 
 @section('content')
@@ -53,7 +72,7 @@
         <div class="swiper-wrapper">
           @foreach ($banner as $ban)
           <?php $ur =$profile->credentials->server.'storage/'.$ban->image;?>
-          <div class="swiper-slide isOpenUrl" link="{{$ban->url}}" style="background-image:url('{{$ur}}'')"></div>
+          <div class="swiper-slide isOpenUrl" link="{{$ban->url}}" style="background-image:url('{{$ur}}')"></div>
           @endforeach
 
         </div>
@@ -77,13 +96,13 @@
         <div class="card card-action mb-5">
           <div class="card-alert"></div>
           <div class="card-body">
-            <form action="/search" method="POST">
+            <form method="POST">
               @csrf
               <div class="row col-12">
                 <div class="col-md-3 col-12">
                   <label for="lokasi">Lokasi Keberangkatan</label>
                   <select class="form-control select2" id="lokasi" name="lokasi">
-                    <option value="all">Semua Lokasi</option>
+                    <option value="semua">Semua Lokasi</option>
                     @foreach ($lokasi as $lok)
                     <option value="{{$lok->from}}">{{$lok->from}}</option>
                     @endforeach
@@ -92,20 +111,20 @@
                 <div class="col-md-3  col-12">
                   <label for="waktu">Waktu Keberangkatan</label>
                   <select class="form-control select2" id="waktu" name="waktu">
-                    <option value="all">Semua Waktu</option>
+                    <option value="semua">Semua Waktu</option>
                     @foreach ($waktu as $wakt)
                     <?php
-                    $date = date_create($wakt->departure_date);
-                    $date = date_format($date, "M Y");
+                    $date1 = date_create($wakt->departure_date);
+                    $date = date_format($date1, "M Y");
                     ?>
-                    <option value="{{$lok->from}}">{{$lok->from}}</option>
+                    <option value="{{$date}}">{{$date}}</option>
                     @endforeach
                   </select>
                 </div>
                 <div class="col-md-3  col-12">
                   <label for="biaya">Biaya</label>
                   <select class="form-control select2" id="biaya" name="biaya">
-                    <option>Semua Biaya</option>
+                    <option value="semua">Semua Biaya</option>
                     <option value="<30000000">< 30jt</option>
                     <option value="30000000-40000000">Rp 30jt - 40jt</option>
                     <option value=">40000000"> Rp 40jt</option>
@@ -113,9 +132,9 @@
                 </div>
                 <div class="col-md-3  col-12">
                   <label>&nbsp;</label><br>
-                  <button type="submit " class="btn btn-warning btn-block form-control">
+                  <a id="btnCari" href="javascript:void(0);" class="btn btn-warning btn-block form-control">
                     <i class="fa fa-search"></i> Cari Paket Umroh
-                  </button>
+                  </a>
                 </div>
               </div>
             </form>
@@ -139,7 +158,7 @@
                   </div>
                 </div>
                 <div class="d-flex justify-content-between">
-                  <p class="text-start"><b>Quad,</b><small class="text-muted">Sekamar Ber-4</small></p>
+                  <p class="text-start"><b>{{$tr->hotels->first()->room_type}},</b><small class="text-muted">Sekamar Ber-{{$tr->hotels->first()->room_capacity}}</small></p>
                   <p class="text-end text-warning fw-bold">{{ number_format($tr->prices->first()->price_dewasa / 1000000, 1, ',', '') }}jt</p>
                 </div>
                 <div class="row mb-1 g-3">
@@ -160,7 +179,7 @@
                         <span class="avatar-initial rounded bg-label-warning"><i class="ti ti-clock ti-md"></i></span>
                       </div>
                       <div>
-                        <h6 class="mb-0 text-nowrap">32 minutes</h6>
+                        <h6 class="mb-0 text-nowrap">{{$tr->duration}} Hari</h6>
                         <small>Duration</small>
                       </div>
                     </div>
@@ -173,7 +192,8 @@
                         <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-plane fa-md"></i></span>
                       </div>
                       <div>
-                        <h6 class="mb-0 text-nowrap">Lion</h6>
+                        <?php $maskapais = \App\Models\Maskapai::find(json_decode($tr->maskapai)[0]); ?>
+                        <h6 class="mb-0 text-nowrap">{{$maskapais->name}}</h6>
                         <small>Maskapai</small>
                       </div>
                     </div>
@@ -184,13 +204,13 @@
                         <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-star fa-md"></i></span>
                       </div>
                       <div>
-                        <h6 class="mb-0 text-nowrap">4</h6>
+                        <h6 class="mb-0 text-nowrap">{{$tr->hotels->first()->stars}}</h6>
                         <small>Hotels</small>
                       </div>
                     </div>
                   </div>
                 </div>
-                <a href="javascript:void(0);" class="btn btn-warning w-100 waves-effect waves-light">Join the event</a>
+                <a href="javascript:void(0);" class="btn btn-warning w-100 waves-effect waves-light isOpenUrl" link="/paket/{{$tr->slug}}" >Join the event</a>
               </div>
             </div>
           </div>
@@ -207,12 +227,13 @@
           <p class="h3 mb-2">Gallery Jamaah</p>
         </div>
         <div class="gallery_jamaah swiper swiper-initialized swiper-horizontal swiper-backface-hidden" id="swiper-multiple-slides"  data-ride="carousel">
-          <div class="swiper-wrapper" id="swiper-wrapper-c59106e7d5dc3b2fd" aria-live="polite" style="transition-duration: 1s; transform: translate3d(-770px, 0px, 0px);">
-            <div class="swiper-slide" style="background-image: url(&quot;../../assets/img/elements/10.jpg&quot;); width: 355px; margin-right: 30px;" role="group" aria-label="1 / 5">Slide 1</div>
-            <div class="swiper-slide swiper-slide-prev" style="background-image: url(&quot;../../assets/img/elements/14.jpg&quot;); width: 355px; margin-right: 30px;" role="group" aria-label="2 / 5">Slide 2</div>
-            <div class="swiper-slide swiper-slide-active" style="background-image: url(&quot;../../assets/img/elements/13.jpg&quot;); width: 355px; margin-right: 30px;" role="group" aria-label="3 / 5">Slide 3</div>
-            <div class="swiper-slide swiper-slide-next" style="background-image: url(&quot;../../assets/img/elements/7.jpg&quot;); width: 355px; margin-right: 30px;" role="group" aria-label="4 / 5">Slide 4</div>
-            <div class="swiper-slide" style="background-image: url(&quot;../../assets/img/elements/15.jpg&quot;); width: 355px; margin-right: 30px;" role="group" aria-label="5 / 5">Slide 5</div>
+          <div class="swiper-wrapper" id="swiper-wrapper-c59106e7d5dc3b2fd" aria-live="polite" style="transition-duration: 1s; transform: translate3d(0px, 0px, 0px);">
+            <?php $no=1;?>
+            @foreach ($gallery as $gal)
+            <?php $urz = $profile->credentials->server.'storage/'.$gal->image;?>
+              <div class="swiper-slide" style="background-image: url('{{$urz}}'); width: 355px; margin-right: 30px;" role="group" aria-label="{{$no}} / {{$gallery->count()}}"></div>
+              <?php $no++;?>
+            @endforeach
           </div>
           <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
       </div>
@@ -249,12 +270,13 @@
           <p class="h2 fw-bold">Rekan Biro Travel Kami</p>
         </div>
         <div class="swiper swiper-initialized swiper-horizontal swiper-backface-hidden" id="swiper-multiple-slides2">
-          <div class="swiper-wrapper" style="transition-duration: 1s; transform: translate3d(-100px, 0px, 0px); height:210px !important;">
-            <div class="swiper-slide" style="background-image: url(&quot;../../assets/img/elements/10.jpg&quot;); width: 200px; margin-right: 30px;" role="group" aria-label="1 / 5">Slide 1</div>
-            <div class="swiper-slide swiper-slide-prev" style="background-image: url(&quot;../../assets/img/elements/14.jpg&quot;); width: 200px; margin-right: 30px;" role="group" aria-label="2 / 5">Slide 2</div>
-            <div class="swiper-slide swiper-slide-active" style="background-image: url(&quot;../../assets/img/elements/13.jpg&quot;); width: 200px; margin-right: 30px;" role="group" aria-label="3 / 5">Slide 3</div>
-            <div class="swiper-slide swiper-slide-next" style="background-image: url(&quot;../../assets/img/elements/7.jpg&quot;); width: 200px; margin-right: 30px;" role="group" aria-label="4 / 5">Slide 4</div>
-            <div class="swiper-slide" style="background-image: url(&quot;../../assets/img/elements/15.jpg&quot;); width: 200px; margin-right: 30px;" role="group" aria-label="5 / 5">Slide 5</div>
+          <div class="swiper-wrapper" id="swiper-wrapper-c59106e7d5dc3b2fd" aria-live="polite" style="transition-duration: 1s; transform: translate3d(0px, 0px, 0px);">
+            <?php $no=1;?>
+            @foreach ($agent as $ag)
+            <?php $ury = $profile->credentials->server.'storage/'.$ag->logo;?>
+              <div class="swiper-slide" style="background-image: url('{{$ury}}'); width: 355px; margin-right: 30px;" role="group" aria-label="{{$no}} / {{$ag->count()}}"></div>
+              <?php $no++;?>
+            @endforeach
           </div>
           <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
       </div>
@@ -266,4 +288,5 @@
   </div>
 </div>
 @endsection
+
 
