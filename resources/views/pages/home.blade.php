@@ -123,13 +123,14 @@
           <p>Paket Umroh dengan Keberangkatan Paling Awal</p>
         </div>
         <div class="row">
+          @foreach ($travel as $tr)
           <div class="col-md-4 col-xl-4 mb-4">
             <div class="card h-100">
               <div class="card-body">
                 <div class="bg-label-primary rounded-3 text-center mb-3 pt-4">
                   <img class="img-fluid" src="../../assets/img/illustrations/girl-with-laptop.png" alt="Card girl image" width="140">
                 </div>
-                <h4 class="mb-1">Judul</h4>
+                <h4 class="mb-1">{{$tr->title}}</h4>
                 <div class="progress mb-2 position-relative justify-content-end" style="height: 20px">
                   <p class="fw-bold ps-2 pe-2 text-black m-0 justify-content-end d-flex position-absolute w-100">Sisa Seat 6</p>
                   <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
@@ -191,6 +192,8 @@
               </div>
             </div>
           </div>
+          @endforeach
+
         </div>
         <div class="col-12 text-center">
           <button class="btn btn-warning btn-lg">Tampilkan Lebih Banyak</button>

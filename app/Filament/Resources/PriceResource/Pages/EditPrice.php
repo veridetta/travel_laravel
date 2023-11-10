@@ -1,18 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\TravelBannerResource\Pages;
+namespace App\Filament\Resources\PriceResource\Pages;
 
-
-
-use App\Filament\Resources\TravelBannerResource;
+use App\Filament\Resources\PriceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use App\Filament\Traits\HasParentResource;
-
-class EditTravelBanner extends EditRecord
+class EditPrice extends EditRecord
 {
   use HasParentResource;
-    protected static string $resource = TravelBannerResource::class;
+    protected static string $resource = PriceResource::class;
 
     protected function getHeaderActions(): array
     {
@@ -22,7 +19,7 @@ class EditTravelBanner extends EditRecord
     }
     protected function getRedirectUrl(): string
     {
-        return $this->previousUrl ?? static::getParentResource()::getUrl('travel-banners.index', [
+        return $this->previousUrl ?? static::getParentResource()::getUrl('prices.index', [
             'parent' => $this->parent,
         ]);
     }
@@ -32,7 +29,7 @@ class EditTravelBanner extends EditRecord
         $resource = static::getResource();
 
         $action->authorize($resource::canDelete($this->getRecord()))
-            ->successRedirectUrl(static::getParentResource()::getUrl('travel-banners.index', [
+            ->successRedirectUrl(static::getParentResource()::getUrl('prices.index', [
                 'parent' => $this->parent,
             ]));
     }

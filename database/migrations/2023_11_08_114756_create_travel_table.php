@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('from');
             $table->date('departure');
             $table->string('duration');
-            $table->string('maskapai');
             $table->string('include');
             $table->string('outclude');
             $table->string('slug');

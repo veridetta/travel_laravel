@@ -1,24 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\TravelBannerResource\Pages;
+namespace App\Filament\Resources\PriceResource\Pages;
 
-use App\Filament\Resources\TravelBannerResource;
+use App\Filament\Resources\PriceResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Traits\HasParentResource;
 
-class ListTravelBanners extends ListRecords
+class ListPrices extends ListRecords
 {
   use HasParentResource;
-  protected static string $resource = TravelBannerResource::class;
+    protected static string $resource = PriceResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            //Actions\CreateAction::make(),
+            //Asctions\CreateAction::make(),
             Actions\CreateAction::make()
                 ->url(
-                    fn (): string => static::getParentResource()::getUrl('travel-banners.create', [
+                    fn (): string => static::getParentResource()::getUrl('prices.create', [
                         'parent' => $this->parent,
                     ])
                 ),

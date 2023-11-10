@@ -32,8 +32,7 @@ class MaskapaiResource extends Resource
                 Forms\Components\FileUpload::make('logo')
                     ->required()
                     ->visibility('public')
-                    ->columnSpanFull()
-                    ->maxLength(255),
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -43,7 +42,7 @@ class MaskapaiResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
+                Tables\Columns\ImageColumn::make('logo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
