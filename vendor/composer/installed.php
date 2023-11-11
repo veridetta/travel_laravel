@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7ed19e772e2565a8e3dca10c79a15d5e15ae15f3',
+        'reference' => 'ce6f12ffda5bf045b5606886462b0bd18351e932',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -526,6 +526,15 @@
                 0 => 'v10.29.0',
             ),
         ),
+        'jorenvanhocht/laravel-share' => array(
+            'pretty_version' => '4.2.0',
+            'version' => '4.2.0.0',
+            'reference' => '86af334068038a840567ed62f2082fe3ac981476',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../jorenvanhocht/laravel-share',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'kirschbaum-development/eloquent-power-joins' => array(
             'pretty_version' => '3.3.1',
             'version' => '3.3.1.0',
@@ -553,7 +562,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7ed19e772e2565a8e3dca10c79a15d5e15ae15f3',
+            'reference' => 'ce6f12ffda5bf045b5606886462b0bd18351e932',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

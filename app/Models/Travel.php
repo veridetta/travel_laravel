@@ -12,6 +12,9 @@ use App\Models\Maskapai;
 class Travel extends Model
 {
     use HasFactory;
+    protected $casts = [
+      'maskapai' => 'array',
+    ];
     public function travel_banners(): HasMany
     {
         return $this->hasMany(TravelBanner::class,'travel_id');
@@ -38,6 +41,7 @@ class Travel extends Model
 
         static::creating(function ($travel) {
             $travel->slug = Str::slug($travel->title);
+            $travel->user_id = auth()->user()->id;
         });
     }
     public function maskapais()

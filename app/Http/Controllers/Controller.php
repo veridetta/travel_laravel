@@ -61,6 +61,7 @@ class Controller extends BaseController
       }
       return view('pages.home',['pageConfigs'=> $pageConfigs,'profile'=>$about,'banner'=>$banner,'lokasi'=>$lokasi,'waktu'=>$waktu,'travel'=>$travel,'kelebihan'=>$kelebihan,'footerTitles'=>$footerTitles,'gallery'=>$gallery,'agent'=>$agent]);
     }
+
     //fungsi pages
     public function pages($slug)
     {

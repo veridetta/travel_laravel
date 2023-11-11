@@ -192,6 +192,14 @@ class EditProfile extends SimplePage
             ->maxLength(255)
             ->autofocus();
     }
+    protected function getPhoneFormComponent(): Component
+    {
+        return TextInput::make('kode')
+            ->label("Phone")
+            ->required()
+            ->maxLength(255)
+            ->autofocus();
+    }
 
     protected function getEmailFormComponent(): Component
     {
@@ -241,6 +249,7 @@ class EditProfile extends SimplePage
                 $this->makeForm()
                     ->schema([
                         $this->getNameFormComponent(),
+                        $this->getPhoneFormComponent(),
                         $this->getEmailFormComponent(),
                         $this->getPasswordFormComponent(),
                         $this->getPasswordConfirmationFormComponent(),

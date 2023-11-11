@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\laravel_example\UserManagement;
@@ -23,8 +24,9 @@ Route::get('/', [Controller::class, 'index'])->name('welcome');
 Route::get('cari-paket/{category}/{schedule}/{departure}/{order}', [PaketController::class, 'search'])->name('cari-paket');
 Route::get('ajax-paket/{category}/{schedule}/{departure}/{order}', [PaketController::class, 'ajax'])->name('ajax-paket');
 Route::get('/paket/{slug}', [PaketController::class, 'paket'])->name('paket');
-
 Route::get('get-kota', [PaketController::class, 'get_kota'])->name('get-kota');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::get('/register-agent', [AuthController::class, 'register_agent'])->name('register-agent');
 
 //buat untuk halaman pages yang nantinya pakai slug
 Route::get('/pages/{slug}', [Controller::class, 'pages'])->name('pages');

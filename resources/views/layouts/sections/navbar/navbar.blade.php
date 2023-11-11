@@ -29,12 +29,12 @@ $navbarDetached = ($navbarDetached ?? '');
       </li>
       @if(!Auth::user())
         <li class="nav-item me-3 me-xl-1">
-          <a class="nav-link btn btn-outline-warning" href="#">
+          <a class="nav-link btn btn-outline-warning" href="/dashboard">
             <span class="align-middle text-warning">MASUK</span>
           </a>
         </li>
         <li class="nav-item me-3 me-xl-1">
-          <a class="nav-link btn btn-warning" href="pages-pricing.html">
+          <a class="nav-link btn btn-warning" href="/register">
             <span class="align-middle text-white">DAFTAR</span>
           </a>
         </li>

@@ -13,10 +13,14 @@ class PermissionPolicy
     public function viewAny(User $user)
     {
       if($user->hasRole('SuperAdmin')){
-        return true;
-    }
-        if($user->hasPermissionTo('View Permissions')){
-            return true;
+          return true;
+      }
+        if($user->role=='user' or $user->role=='agent'){
+          return false;
+        }else{
+          if($user->hasPermissionTo('View Permissions')){
+              return true;
+          }
         }
         return false;
     }

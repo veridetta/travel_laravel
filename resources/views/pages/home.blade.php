@@ -29,6 +29,26 @@
           transform: translateX(-90%);
       }
   }
+  swiper-container {
+      width: 100%;
+      height: 180px;
+    }
+
+    swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
 </style>
 @endsection
 
@@ -42,6 +62,10 @@
 <script src="{{asset('assets/js/ui-carousel.js')}}"></script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script>
+   $("#btnMore").click(function(){
+    var url = "/ajax-paket/semua/semua/semua/segera?price=semua&duration=semua";
+    window.location.href = url;
+   });
    $("#btnCari").click(function(){
     var lokasi = $("#lokasi").val();
     if(lokasi=="Semua Lokasi"){
@@ -56,10 +80,80 @@
       waktu = waktu.replace(/\s/g, "-");
     }
     var biaya = $("#biaya").val();
-    var url = "/cari-paket/semua/"+waktu+"/"+lokasi+"/segera?price="+biaya+"&duration=semua";
+    var url = "/ajax-paket/semua/"+waktu+"/"+lokasi+"/segera?price="+biaya+"&duration=semua";
     window.location.href = url;
   });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+
+  <script>
+    const swiperEl = document.querySelector('.mySwiper');
+    Object.assign(swiperEl, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      pagination: {
+        clickable: true,
+      },
+      breakpoints: {
+        "@0.00": {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        "@0.75": {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        "@1.00": {
+          slidesPerView: 3,
+          spaceBetween: 40,
+        },
+        "@1.50": {
+          slidesPerView: 4,
+          spaceBetween: 50,
+        },
+        "@2.00": {
+          slidesPerView: 5,
+          spaceBetween: 50,
+        },
+      },
+    });
+
+    swiperEl.initialize();
+  </script>
+  <script>
+    const swiperEl2 = document.querySelector('.mySwiper2');
+    Object.assign(swiperEl2, {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      pagination: {
+        clickable: true,
+      },
+      breakpoints: {
+        "@0.00": {
+          slidesPerView: 1,
+          spaceBetween: 10,
+        },
+        "@0.75": {
+          slidesPerView: 2,
+          spaceBetween: 20,
+        },
+        "@1.00": {
+          slidesPerView: 3,
+          spaceBetween: 40,
+        },
+        "@1.50": {
+          slidesPerView: 4,
+          spaceBetween: 50,
+        },
+        "@2.00": {
+          slidesPerView: 5,
+          spaceBetween: 50,
+        },
+      },
+    });
+
+    swiperEl2.initialize();
+  </script>
 @endsection
 
 @section('content')
@@ -132,7 +226,7 @@
                 </div>
                 <div class="col-md-3  col-12">
                   <label>&nbsp;</label><br>
-                  <a id="btnCari" href="javascript:void(0);" class="btn btn-warning btn-block form-control">
+                  <a id="btnCari"  href="javascript:void(0);" class="btn btn-warning btn-block form-control">
                     <i class="fa fa-search"></i> Cari Paket Umroh
                   </a>
                 </div>
@@ -192,7 +286,7 @@
                         <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-plane fa-md"></i></span>
                       </div>
                       <div>
-                        <?php $maskapais = \App\Models\Maskapai::find(json_decode($tr->maskapai)[0]); ?>
+                        <?php $maskapais = \App\Models\Maskapai::find($tr->maskapai[0]); ?>
                         <h6 class="mb-0 text-nowrap">{{$maskapais->name}}</h6>
                         <small>Maskapai</small>
                       </div>
@@ -218,7 +312,7 @@
 
         </div>
         <div class="col-12 text-center">
-          <button class="btn btn-warning btn-lg">Tampilkan Lebih Banyak</button>
+          <button class="btn btn-warning btn-lg" id="btnMore">Tampilkan Lebih Banyak</button>
         </div>
       </div>
       <!-- gallery jamaah -->
@@ -226,16 +320,13 @@
         <div class="col-12">
           <p class="h3 mb-2">Gallery Jamaah</p>
         </div>
-        <div class="gallery_jamaah swiper swiper-initialized swiper-horizontal swiper-backface-hidden" id="swiper-multiple-slides"  data-ride="carousel">
-          <div class="swiper-wrapper" id="swiper-wrapper-c59106e7d5dc3b2fd" aria-live="polite" style="transition-duration: 1s; transform: translate3d(0px, 0px, 0px);">
-            <?php $no=1;?>
-            @foreach ($gallery as $gal)
-            <?php $urz = $profile->credentials->server.'storage/'.$gal->image;?>
-              <div class="swiper-slide" style="background-image: url('{{$urz}}'); width: 355px; margin-right: 30px;" role="group" aria-label="{{$no}} / {{$gallery->count()}}"></div>
-              <?php $no++;?>
-            @endforeach
-          </div>
-          <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+        <swiper-container class="mySwiper" init="false" navigation="true" pagination-clickable="true" navigation="true"
+        autoplay-delay="2500" >
+        @foreach ($gallery as $gal)
+        <?php $urz =$profile->credentials->server.'storage/'.$gal->image;?>
+        <swiper-slide style="background-image:url('{{$urz}}');background-size:contain;;background-repeat:no-repeat;background-position:center"></swiper-slide>
+        @endforeach
+        </swiper-container>
       </div>
       <!-- /gallery jamaah -->
       <!-- Mengapa -->
@@ -269,16 +360,14 @@
         <div class="col-12">
           <p class="h2 fw-bold">Rekan Biro Travel Kami</p>
         </div>
-        <div class="swiper swiper-initialized swiper-horizontal swiper-backface-hidden" id="swiper-multiple-slides2">
-          <div class="swiper-wrapper" id="swiper-wrapper-c59106e7d5dc3b2fd" aria-live="polite" style="transition-duration: 1s; transform: translate3d(0px, 0px, 0px);">
-            <?php $no=1;?>
-            @foreach ($agent as $ag)
-            <?php $ury = $profile->credentials->server.'storage/'.$ag->logo;?>
-              <div class="swiper-slide" style="background-image: url('{{$ury}}'); width: 355px; margin-right: 30px;" role="group" aria-label="{{$no}} / {{$ag->count()}}"></div>
-              <?php $no++;?>
-            @endforeach
-          </div>
-          <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+
+        <swiper-container class="mySwiper2" init="false" navigation="true" pagination-clickable="true" navigation="true"
+        autoplay-delay="2500" >
+        @foreach ($agent as $ag)
+        <?php $urz =$profile->credentials->server.'storage/'.$ag->logo;?>
+        <swiper-slide style="background-image:url('{{$urz}}');background-size:contain;;background-repeat:no-repeat;background-position:center"></swiper-slide>
+        @endforeach
+        </swiper-container>
       </div>
       <!-- /Rekan -->
       <div class="col-md-10">

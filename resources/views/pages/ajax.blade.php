@@ -46,7 +46,7 @@
                     <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-plane fa-md"></i></span>
                   </div>
                   <div>
-                    <?php $maskapais = \App\Models\Maskapai::find(json_decode($tr->maskapai)[0]); ?>
+                    <?php $maskapais = \App\Models\Maskapai::find($tr->maskapai[0]); ?>
                     <h6 class="mb-0 text-nowrap">{{$maskapais->name}}</h6>
                     <small>Maskapai</small>
                   </div>

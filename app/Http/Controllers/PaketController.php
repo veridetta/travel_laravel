@@ -10,6 +10,7 @@ use App\Models\Setting;
 use App\Models\Travel;
 use DateTime;
 use Illuminate\Http\Request;
+use Jorenvh\Share\Share;
 
 class PaketController extends Controller
 {
@@ -203,8 +204,20 @@ class PaketController extends Controller
             'pages' => $pagesData
         ];
       }
-      $pageConfigs = ['myLayout' => 'horizontal'];
+    $pageConfigs = ['myLayout' => 'horizontal'];
+    $page = $profile->credentials->server.'/paket/'.$slug;
     $content = Travel::where('slug',$slug)->first();
-    return view('pages.detail_paket',['pageConfigs'=> $pageConfigs,'profile'=>$about,'tr'=>$content,'footerTitles'=>$footerTitles]);
+    $share = new \Jorenvh\Share\Share();
+    $shareComponent = $share->page(
+        $page,
+        'Paket '.$content->name,
+    )
+      ->facebook()
+      ->twitter()
+      ->linkedin()
+      ->telegram()
+      ->whatsapp()
+      ->reddit();
+    return view('pages.detail_paket',['pageConfigs'=> $pageConfigs,'profile'=>$about,'tr'=>$content,'footerTitles'=>$footerTitles,'shareComponent'=>$shareComponent]);
   }
 }

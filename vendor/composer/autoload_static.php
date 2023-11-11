@@ -158,6 +158,10 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         array (
             'Kirschbaum\\PowerJoins\\' => 22,
         ),
+        'J' => 
+        array (
+            'Jorenvh\\Share\\' => 14,
+        ),
         'I' => 
         array (
             'Illuminate\\Support\\' => 19,
@@ -529,6 +533,10 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         array (
             0 => __DIR__ . '/..' . '/kirschbaum-development/eloquent-power-joins/src',
         ),
+        'Jorenvh\\Share\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jorenvanhocht/laravel-share/src',
+        ),
         'Illuminate\\Support\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Macroable',
@@ -792,6 +800,10 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'App\\Filament\\Resources\\SettingResource\\Pages\\CreateSetting' => __DIR__ . '/../..' . '/app/Filament/Resources/SettingResource/Pages/CreateSetting.php',
         'App\\Filament\\Resources\\SettingResource\\Pages\\EditSetting' => __DIR__ . '/../..' . '/app/Filament/Resources/SettingResource/Pages/EditSetting.php',
         'App\\Filament\\Resources\\SettingResource\\Pages\\ListSettings' => __DIR__ . '/../..' . '/app/Filament/Resources/SettingResource/Pages/ListSettings.php',
+        'App\\Filament\\Resources\\SyaratResource' => __DIR__ . '/../..' . '/app/Filament/Resources/SyaratResource.php',
+        'App\\Filament\\Resources\\SyaratResource\\Pages\\CreateSyarat' => __DIR__ . '/../..' . '/app/Filament/Resources/SyaratResource/Pages/CreateSyarat.php',
+        'App\\Filament\\Resources\\SyaratResource\\Pages\\EditSyarat' => __DIR__ . '/../..' . '/app/Filament/Resources/SyaratResource/Pages/EditSyarat.php',
+        'App\\Filament\\Resources\\SyaratResource\\Pages\\ListSyarats' => __DIR__ . '/../..' . '/app/Filament/Resources/SyaratResource/Pages/ListSyarats.php',
         'App\\Filament\\Resources\\TopBannerResource' => __DIR__ . '/../..' . '/app/Filament/Resources/TopBannerResource.php',
         'App\\Filament\\Resources\\TopBannerResource\\Pages\\CreateTopBanner' => __DIR__ . '/../..' . '/app/Filament/Resources/TopBannerResource/Pages/CreateTopBanner.php',
         'App\\Filament\\Resources\\TopBannerResource\\Pages\\EditTopBanner' => __DIR__ . '/../..' . '/app/Filament/Resources/TopBannerResource/Pages/EditTopBanner.php',
@@ -811,6 +823,7 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'App\\Filament\\Traits\\HasParentResource' => __DIR__ . '/../..' . '/app/Filament/Traits/HasParentResource.php',
         'App\\Helpers\\Helpers' => __DIR__ . '/../..' . '/app/Helpers/Helpers.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\PaketController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaketController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -846,6 +859,7 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'App\\Models\\Role' => __DIR__ . '/../..' . '/app/Models/Role.php',
         'App\\Models\\Room' => __DIR__ . '/../..' . '/app/Models/Room.php',
         'App\\Models\\Setting' => __DIR__ . '/../..' . '/app/Models/Setting.php',
+        'App\\Models\\Syarat' => __DIR__ . '/../..' . '/app/Models/Syarat.php',
         'App\\Models\\TopBanner' => __DIR__ . '/../..' . '/app/Models/TopBanner.php',
         'App\\Models\\Travel' => __DIR__ . '/../..' . '/app/Models/Travel.php',
         'App\\Models\\TravelBanner' => __DIR__ . '/../..' . '/app/Models/TravelBanner.php',
@@ -4148,6 +4162,9 @@ class ComposerStaticInit55a8aba4dc0afdc8ee5237bd6f109e4d
         'Illuminate\\View\\ViewFinderInterface' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewFinderInterface.php',
         'Illuminate\\View\\ViewName' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewName.php',
         'Illuminate\\View\\ViewServiceProvider' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/View/ViewServiceProvider.php',
+        'Jorenvh\\Share\\Providers\\ShareServiceProvider' => __DIR__ . '/..' . '/jorenvanhocht/laravel-share/src/Providers/ShareServiceProvider.php',
+        'Jorenvh\\Share\\Share' => __DIR__ . '/..' . '/jorenvanhocht/laravel-share/src/Share.php',
+        'Jorenvh\\Share\\ShareFacade' => __DIR__ . '/..' . '/jorenvanhocht/laravel-share/src/ShareFacade.php',
         'Kirschbaum\\PowerJoins\\EloquentJoins' => __DIR__ . '/..' . '/kirschbaum-development/eloquent-power-joins/src/EloquentJoins.php',
         'Kirschbaum\\PowerJoins\\FakeJoinCallback' => __DIR__ . '/..' . '/kirschbaum-development/eloquent-power-joins/src/FakeJoinCallback.php',
         'Kirschbaum\\PowerJoins\\JoinsHelper' => __DIR__ . '/..' . '/kirschbaum-development/eloquent-power-joins/src/JoinsHelper.php',

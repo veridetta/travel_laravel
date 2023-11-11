@@ -49,6 +49,21 @@
       height: auto;
       object-fit: cover;
     }
+    div#social-links {
+                margin: 0 auto;
+                max-width: 500px;
+            }
+            div#social-links ul li {
+                display: inline-block;
+            }
+            div#social-links ul li a {
+                padding: 4px;
+                border: 1px solid #ccc;
+                margin: 1px;
+                font-size: 30px;
+                color: #fff;
+                background-color:#ffc107 ;
+            }
 </style>
 @endsection
 
@@ -111,7 +126,7 @@
                   <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-plane fa-md"></i></span>
                 </div>
                 <div>
-                  <?php $maskapais = \App\Models\Maskapai::find(json_decode($tr->maskapai)[0]); ?>
+                  <?php $maskapais = \App\Models\Maskapai::find($tr->maskapai[0]); ?>
                   <h6 class="mb-0 text-nowrap">{{$maskapais->name}}</h6>
                   <small>Maskapai</small>
                 </div>
@@ -197,7 +212,7 @@
           <div class="divider pb-2 bg-warning col-2">
           </div>
             <div class="col-12 row">
-              @foreach (json_decode($tr->maskapai) as $i=>$mk)
+              @foreach ($tr->maskapai as $i=>$mk)
               <?php $maskapai = \App\Models\Maskapai::find($mk); ?>
               <div class="col-6 p-2">
                 <p class="h5">Penerbangan {{$i+1}}</p>
@@ -264,7 +279,8 @@
           </div>
           <p class="text-warning mt-2 mb-2">Amankan seat dengan uang muka 5jt /Jamaah. Transaksi aman, ibadah nyaman. Pembayaran hanya diproses apabila tiket pesawat telah confirm.</p>
           <button type="button" class="mb-2 btn btn-warning btn-lg w-100 waves-effect waves-light">Pesan Paket</button>
-          <button type="button" class="mb-2 btn btn-outline-warning btn-lg w-100 waves-effect waves-light">Bagikan</button>
+          <p class="text-muted h4 mb-0">Bagikan :</p>
+          <h2 class="text-start">{!!$shareComponent !!}</h2>
         </div>
       </div>
     </div>

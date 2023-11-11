@@ -32,10 +32,11 @@ class HowToAgentResource extends Resource
                     ->image()
                     ->visibility('public')
                     ->directory('images')
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\RichEditor::make('description')
                     ->required()
-                    ->maxLength(255),
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('order')
                     ->required()
                     ->numeric(),

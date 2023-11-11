@@ -12,6 +12,8 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class AgentResource extends Resource
 {
@@ -21,12 +23,19 @@ class AgentResource extends Resource
     protected static ?string $navigationGroup = 'Data & Management';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel="Agent";
+    public static string $parentResource = UserResource::class;
+    protected static bool $shouldRegisterNavigation = false;
+
+    public static function getRecordTitle(?Model $record): string|null|Htmlable
+    {
+        return $record->name;
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nama')
+                Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('alamat')
@@ -39,10 +48,9 @@ class AgentResource extends Resource
                 Forms\Components\TextInput::make('nama_rekening')
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('logo')
-                    ->maxLength(255)
                     ->visibility('public')
-                    ->directory('images')
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
                 Forms\Components\TextInput::make('izin')
                     ->maxLength(255)
                     ->required(),
@@ -53,7 +61,7 @@ class AgentResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nama')
+                Tables\Columns\TextColumn::make('name')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('alamat')
                     ->searchable(),
@@ -63,7 +71,7 @@ class AgentResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nama_rekening')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('logo')
+                Tables\Columns\ImageColumn::make('logo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('izin')
                     ->searchable(),
@@ -80,7 +88,13 @@ class AgentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+              Tables\Actions\EditAction::make()
+              ->url(
+                  fn (Pages\ListAgents $livewire, Model $record): string => static::$parentResource::getUrl('agents.edit', [
+                      'record' => $record,
+                      'parent' => $livewire->parent,
+                  ])
+              ),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -95,7 +109,7 @@ class AgentResource extends Resource
             //
         ];
     }
-
+/*
     public static function getPages(): array
     {
         return [
@@ -104,4 +118,5 @@ class AgentResource extends Resource
             'edit' => Pages\EditAgent::route('/{record}/edit'),
         ];
     }
+    */
 }

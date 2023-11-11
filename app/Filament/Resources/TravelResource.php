@@ -158,7 +158,8 @@ class TravelResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('duration')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('maskapais.name')
+                Tables\Columns\TextColumn::make('maskapai')
+                    ->badge()
                     ->label('Maskapai')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('include')

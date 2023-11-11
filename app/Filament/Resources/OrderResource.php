@@ -16,7 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-
+    public function __construct()
+    {
+        self::$navigationGroup = $this->whereGroup();
+    }
     protected static ?string $navigationIcon = 'heroicon-o-clipboard';
     protected static ?string $navigationGroup = 'Financial';
     protected static ?int $navigationSort = 1;
@@ -86,6 +89,14 @@ class OrderResource extends Resource
         return [
             //
         ];
+    }
+    public function whereGroup():String
+    {
+      if(auth()->user()->role=='user'){
+        return '';
+      }else{
+        return 'Financial';
+      }
     }
 
     public static function getPages(): array
