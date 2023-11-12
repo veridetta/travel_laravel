@@ -23,7 +23,7 @@
                   </div>
                   <div>
                     <h6 class="mb-0 text-nowrap">{{ date('d M y', strtotime($tr->date)) }}</h6>
-                    <small>Date</small>
+                    <small>Tanggal</small>
                   </div>
                 </div>
               </div>
@@ -34,7 +34,7 @@
                   </div>
                   <div>
                     <h6 class="mb-0 text-nowrap">{{$tr->duration}} Hari</h6>
-                    <small>Duration</small>
+                    <small>Durasi</small>
                   </div>
                 </div>
               </div>
@@ -59,7 +59,7 @@
                   </div>
                   <div>
                     <h6 class="mb-0 text-nowrap">{{$tr->hotels->first()->stars}}</h6>
-                    <small>Hotels</small>
+                    <small>Hotel</small>
                   </div>
                 </div>
               </div>

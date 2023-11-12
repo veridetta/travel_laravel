@@ -14,7 +14,7 @@ class PaymentPolicy
     public function viewAny(User $user)
     {
       if($user->role=='user'){
-        return false;
+        return true;
       }else{
         if($user->role='agent'){
           return true;

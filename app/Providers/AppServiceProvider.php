@@ -13,6 +13,10 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->singleton(
+          LoginResponse::class,
+          \App\Http\Responses\LoginResponse::class
+        );
     }
 
     /**

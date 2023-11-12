@@ -25,6 +25,8 @@ Route::get('cari-paket/{category}/{schedule}/{departure}/{order}', [PaketControl
 Route::get('ajax-paket/{category}/{schedule}/{departure}/{order}', [PaketController::class, 'ajax'])->name('ajax-paket');
 Route::get('/paket/{slug}', [PaketController::class, 'paket'])->name('paket');
 Route::get('get-kota', [PaketController::class, 'get_kota'])->name('get-kota');
+Route::get('buat-pesanan', [PaketController::class, 'buat_pesanan'])->name('buat-pesanan');
+Route::get('buat-pembayaran', [PaketController::class, 'buat_pembayaran'])->name('buat-pembayaran');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/register-agent', [AuthController::class, 'register_agent'])->name('register-agent');
 

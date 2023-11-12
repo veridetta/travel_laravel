@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\About;
+use App\Models\Agent;
 use App\Models\Footer;
 use App\Models\Page;
 use App\Models\Setting;
@@ -219,5 +220,24 @@ class PaketController extends Controller
       ->whatsapp()
       ->reddit();
     return view('pages.detail_paket',['pageConfigs'=> $pageConfigs,'profile'=>$about,'tr'=>$content,'footerTitles'=>$footerTitles,'shareComponent'=>$shareComponent]);
+  }
+  public function buat_pesanan(Request $request){
+    $slug = $request->input('q');
+    if(auth()->user()){
+      $user = auth()->user();
+      $travel = Travel::where('slug',$slug)->first();
+      $agent = Agent::where('user_id',$travel->user_id)->first();;
+      $order = new \App\Models\Order;
+      $order->user_id = $user->id;
+      $order->travel_id = $travel->id;
+      $order->agent_id = $agent->id;
+      $order->total_price = $travel->prices->first()->price_dewasa;
+      $order->status = 'Menunggu Pembayaran';
+      $order->save();
+
+      return redirect('/dashboard/orders/'.$order->id.'/rooms/create');
+    }else{
+      return redirect('/dashboard/login?page=paket/'.$slug)->with('error','Silahkan login terlebih dahulu');
+    }
   }
 }

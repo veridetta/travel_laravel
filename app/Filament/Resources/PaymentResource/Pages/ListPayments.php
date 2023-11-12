@@ -9,11 +9,12 @@ use Filament\Resources\Pages\ListRecords;
 class ListPayments extends ListRecords
 {
     protected static string $resource = PaymentResource::class;
+    protected static ?string $title = "Halaman Pembayaran";
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            //Actions\CreateAction::make(),
         ];
     }
 }

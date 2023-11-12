@@ -75,6 +75,11 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js"></script>
+<script>
+  $("#btnPesan").click(function(){
+    window.location.href="/buat-pesanan?q={{$tr->slug}}";
+  })
+</script>
 @endsection
 
 @section('content')
@@ -103,7 +108,7 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-nowrap">{{ date('d M y', strtotime($tr->date)) }}</h6>
-                  <small>Date</small>
+                  <small>Tanggal</small>
                 </div>
               </div>
             </div>
@@ -114,7 +119,7 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-nowrap">{{$tr->duration}} Hari</h6>
-                  <small>Duration</small>
+                  <small>Durasi</small>
                 </div>
               </div>
             </div>
@@ -139,7 +144,7 @@
                 </div>
                 <div>
                   <h6 class="mb-0 text-nowrap">{{$tr->hotels->first()->stars}}</h6>
-                  <small>Hotels</small>
+                  <small>Hotel</small>
                 </div>
               </div>
             </div>
@@ -278,7 +283,7 @@
             </div>
           </div>
           <p class="text-warning mt-2 mb-2">Amankan seat dengan uang muka 5jt /Jamaah. Transaksi aman, ibadah nyaman. Pembayaran hanya diproses apabila tiket pesawat telah confirm.</p>
-          <button type="button" class="mb-2 btn btn-warning btn-lg w-100 waves-effect waves-light">Pesan Paket</button>
+          <button type="button" id="btnPesan" class="mb-2 btn btn-warning btn-lg w-100 waves-effect waves-light">Pesan Paket</button>
           <p class="text-muted h4 mb-0">Bagikan :</p>
           <h2 class="text-start">{!!$shareComponent !!}</h2>
         </div>

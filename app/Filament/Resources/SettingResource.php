@@ -29,10 +29,12 @@ class SettingResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('whatsapp_api')
+                    ->label('MIDTRANS CLIENT KEY')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('midtrans_api')
+                    ->label('MIDTRANS SERVER KEY')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),

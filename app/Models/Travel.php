@@ -15,6 +15,10 @@ class Travel extends Model
     protected $casts = [
       'maskapai' => 'array',
     ];
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class,'travel_id');
+    }
     public function travel_banners(): HasMany
     {
         return $this->hasMany(TravelBanner::class,'travel_id');

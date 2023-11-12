@@ -2,6 +2,7 @@
 
 namespace Filament\Pages\Auth;
 
+use App\Http\Responses\LoginResponse as ResponsesLoginResponse;
 use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
 use DanHarrin\LivewireRateLimiting\WithRateLimiting;
 use Filament\Actions\Action;
@@ -87,7 +88,15 @@ class Login extends SimplePage
 
         session()->regenerate();
 
-        return app(LoginResponse::class);
+        //return app(LoginResponse::class);
+        $redirectPage = explode("?page=",request()->server('HTTP_REFERER'))[1];
+        if($redirectPage != null or $redirectPage!==''){
+          //return env server / redirectpage
+          return app(ResponsesLoginResponse::class);
+          //return new LoginResponse(env('APP_URL').'/'.$redirectPage);
+        }else{
+          return app(LoginResponse::class);
+        }
     }
 
     protected function throwFailureValidationException(): never
