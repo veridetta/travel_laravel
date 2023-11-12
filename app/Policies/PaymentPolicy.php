@@ -46,7 +46,16 @@ class PaymentPolicy
      */
     public function update(User $user, Payment $payment)
     {
-        //
+      if($user->role=='user'){
+        return true;
+      }else{
+        if($user->role='agent'){
+          return false;
+        }else if($user->hasPermissionTo('View Permissions')){
+            return true;
+        }
+      }
+      return false;
     }
 
     /**

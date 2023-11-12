@@ -44,6 +44,10 @@ class SettingResource extends Resource
                 Forms\Components\TextInput::make('no_rek')
                     ->required()
                     ->maxLength(255),
+                    Forms\Components\TextInput::make('an')
+                    ->required()
+                    ->label('Atas Nama')
+                    ->maxLength(255),
                 Forms\Components\Toggle::make('diliput')
                     ->label('Aktifkan informasi diliput oleh media')
                     ->required(),

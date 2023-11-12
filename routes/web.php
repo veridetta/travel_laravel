@@ -26,7 +26,14 @@ Route::get('ajax-paket/{category}/{schedule}/{departure}/{order}', [PaketControl
 Route::get('/paket/{slug}', [PaketController::class, 'paket'])->name('paket');
 Route::get('get-kota', [PaketController::class, 'get_kota'])->name('get-kota');
 Route::get('buat-pesanan', [PaketController::class, 'buat_pesanan'])->name('buat-pesanan');
-Route::get('buat-pembayaran', [PaketController::class, 'buat_pembayaran'])->name('buat-pembayaran');
+//1
+Route::get('buat-pembayaran/{id}', [PaketController::class, 'select_pay'])->name('buat-pembayaran');
+//2
+Route::get('post-pembayaran/{id}/{type}/{direct}', [PaketController::class, 'post_pay'])->name('post-pembayaran');
+//3;
+Route::get('update/{id}/{status}', [PaketController::class, 'update'])->name('update-payment');
+//4
+Route::get('/cek', [PaketController::class, 'cek'])->name('cek');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/register-agent', [AuthController::class, 'register_agent'])->name('register-agent');
 

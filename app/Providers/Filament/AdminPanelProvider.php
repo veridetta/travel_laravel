@@ -79,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
                     ->label('Data & Management')
                     ,
                 NavigationGroup::make()
-                    ->label('Financial')
+                    ->label('Pemesanan & Pembayaran')
                     ,
                 NavigationGroup::make()
                      ->label('Website')

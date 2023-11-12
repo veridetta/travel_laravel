@@ -48,7 +48,7 @@ class OrderResource extends Resource
         self::$navigationGroup = $this->whereGroup();
     }
     protected static ?string $navigationIcon = 'heroicon-o-clipboard';
-    protected static ?string $navigationGroup = 'Financial';
+    protected static ?string $navigationGroup = 'Pemesanan & Pembayaran';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationLabel="Pesanan";
     public static ?string $title="Data Pesanan";
@@ -74,12 +74,11 @@ class OrderResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('travel_id')
                     ->numeric()
+                    ->default($travel->id)
                     ->hidden($travel->id),
-                Forms\Components\TextInput::make('user_id')
-                    ->hidden(auth()->user()->id)
-                    ->numeric(),
-                Forms\Components\TextInput::make('agent_id')
-                    ->hidden($travel->user_id)
+                Forms\Components\TextInput::make('price_id')
+                    ->hidden($price->id)
+                    ->default($price->id)
                     ->numeric(),
               Section::make('Jumlah Peserta')
               ->description('Masukan jumlah')
@@ -212,6 +211,12 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('agents.name')
                     ->label('Nama Agen')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('payments.dp')
+                    ->currency('IDR')
+                    ->badge('danger')
+                    ->label('DP Masuk')
+                    ->default(0)
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('total_price')
                     ->currency('IDR')
                     ->badge('success')
@@ -242,6 +247,11 @@ class OrderResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make()
                 ->label("Atur"),
+                //action buka url
+                ActionsAction::make('pay')
+                ->color('success')
+                ->label('Atur Pembayaran')
+                ->url(fn (Order $record) => route('buat-pembayaran', $record->id))
             ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

@@ -29,4 +29,5 @@ class Order extends Model
     {
       return $this->hasMany(Peserta::class, 'order_id', 'id');
     }
+
 }
