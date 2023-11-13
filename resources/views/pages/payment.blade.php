@@ -78,6 +78,8 @@
               </div>
             </div>
             <button type="button" id="btnBayar" class="btn btn-warning btn-block mt-3">Bayar</button>
+            <a type="button" href="/dashboard/payments" id="btncek" class="mt-2 btn btn-outline-warning btn-block mt-3">Saya sudah melakukan pembayaran</a>
+            <span> Jika anda sudah melakukan pembayaran, dan status masih menunggu pembayaran, silahkan lakukan upload bukti pembayaran.</span>
           </div>
         </div>
       </div>

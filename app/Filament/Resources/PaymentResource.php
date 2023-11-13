@@ -4,10 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Filament\Resources\PaymentResource\RelationManagers;
+use App\Models\Order;
 use App\Models\Payment;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -52,10 +55,11 @@ class PaymentResource extends Resource
                   ->options([
                     'dp' => 'DP',
                     'full' => 'Pembayaran Penuh',
+                    'penarikan' => 'Penarikan Dana',
                 ])
                   ->required()
                   ->disabled(function(){
-                    if(auth()->user()->role=='agent'){
+                    if(auth()->user()->role=='agent' or auth()->user()->role=='user'){
                       return true;
                     }else{
                       return false;
@@ -64,22 +68,87 @@ class PaymentResource extends Resource
                 Forms\Components\FileUpload::make('bukti')
                 ->visibility('public')
                 ->columnSpanFull(),
+                Placeholder::make('statuspl')
+                  ->label('Status Pembayaran')
+                  ->content(
+                    function(Get $get, Set $set){
+                      if(auth()->user()->role=='user'){
+                        if($get('bukti')!=null){
+                          $set('status', 'Menunggu Konfirmasi');
+                          return 'Menunggu Konfirmasi';
+                        }
+                      }
+                    }
+                  )
+                  ->columnSpanFull(),
                 Forms\Components\Select::make('status')
                   ->label('Status')
-                  ->options([
-                    'Menunggu Pembayaran' => 'Menunggu Pembayaran',
-                    'success' => 'Lunas',
-                    'failed' => 'Gagal',
-                  ])
+                  ->live()
+                  ->afterStateUpdated(function(Get $get, Set $set){
+                    if($get('status')=='Lunas'){
+                      if($get('type')=='dp'){
+                        $order = Order::where('id', '=', $get('order_id'))->first();
+                        $order->dp = $get('total_price');
+                        $order->save();
+                      }else{
+                        $order = Order::where('id', '=', $get('order_id'))->first();
+                        $order->status = "Lunas";
+                        $order->save();
+                      }
+                    }
+                  })
+                  ->options(
+                    function(Get $get){
+                      if(auth()->user()->role=='user'){
+                        if($get('bukti')!=null){
+                          return [
+                            'Menunggu Konfirmasi'=> 'Menunggu Konfirmasi',
+                          ];
+                        }else{
+                          return [
+                            'Menunggu Pembayaran' => 'Menunggu Pembayaran',
+                          ];
+                        }
+                      }else{
+                        if($get('type')=='penarikan'){
+                          return [
+                            'Menunggu Konfirmasi'=> 'Menunggu Konfirmasi',
+                            'Dibayarkan' => 'Dibayarkan',
+                            'Gagal' => 'Gagal',
+                          ];
+                        }else{
+                          return [
+                            'Menunggu Pembayaran' => 'Menunggu Pembayaran',
+                            'Menunggu Konfirmasi'=> 'Menunggu Konfirmasi',
+                            'Lunas' => 'Lunas',
+                            'Gagal' => 'Gagal',
+                          ];
+                        }
+                      }
+                    }
+                  )
                   ->placeholder(
                     function (string $state) {
-                      return $state;
+                      if($state==null){
+                        return 'Menunggu Pembayaran';
+                      }else{
+                        return $state;
+                      }
                     }
                   )
                   ->required()
+                  ->default(
+                    function(Get $get){
+                      if($get('bukti')!=null){
+                        return 'Menunggu Konfirmasi';
+                      }else{
+                        return 'Menunggu Pembayaran';
+                      }
+                    }
+                  )
                   ->disabled(
                     function () {
-                      if(auth()->user()->role=='user' or auth()->user()->role=='agent'){
+                      if(auth()->user()->role=='agent'){
                         return true;
                       }else{
                         return false;
@@ -94,7 +163,7 @@ class PaymentResource extends Resource
         return $table
             ->columns([
                 //direct, bank, total_price, status, type, bukti
-                Tables\Columns\TextColumn::make('metode_pembayarans.name')
+                Tables\Columns\TextColumn::make('direct')
                   ->searchable()
                   ->label('Metode Pembayaran')
                   ->placeholder(fn (string $state): string => match ($state) {
@@ -118,6 +187,7 @@ class PaymentResource extends Resource
                   ->color(fn (string $state): string => match ($state) {
                       'pending' => 'Menunggu Pembayaran',
                       'success' => 'Lunas',
+                      'success'=>'Dibayarkan',
                       'failed' => 'danger',
                       default => 'warning',
                   })
@@ -142,7 +212,34 @@ class PaymentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                ->label('Atur Pembayaran'),
+                ->label(function(Payment $payment){
+                  if(auth()->user()->role=='user'){
+                    if($payment->status=='Menunggu Pembayaran'){
+                      return 'Upload Bukti Pembayaran';
+                    }else{
+                      return 'Lihat Detail';
+                    }
+                  }else if(auth()->user()->role=='agent'){
+                    return 'Lihat Detail';
+                  }else{
+                    return 'Ubah Status';
+                  }
+                })
+                ->after(
+                  function(Payment $payment){
+                    if($payment->status=='Lunas'){
+                      if($payment->type=='dp'){
+                        $order = Order::where('id', '=', $payment->order_id)->first();
+                        $order->dp = $payment->total_price;
+                        $order->save();
+                      }else{
+                        $order = Order::where('id', '=', $payment->order_id)->first();
+                        $order->status = "Lunas";
+                        $order->save();
+                      }
+                    }
+                  }
+                ),
             ],
             position: ActionsPosition::BeforeColumns)
             ->bulkActions([

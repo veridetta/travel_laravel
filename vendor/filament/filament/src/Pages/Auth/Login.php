@@ -89,13 +89,12 @@ class Login extends SimplePage
         session()->regenerate();
 
         //return app(LoginResponse::class);
-        $redirectPage = explode("?page=",request()->server('HTTP_REFERER'))[1];
-        if($redirectPage != null or $redirectPage!==''){
-          //return env server / redirectpage
-          return app(ResponsesLoginResponse::class);
-          //return new LoginResponse(env('APP_URL').'/'.$redirectPage);
-        }else{
-          return app(LoginResponse::class);
+        if (strpos(request()->server('HTTP_REFERER'), '?page') !== false) {
+            // '?page' ditemukan dalam request()->server('HTTP_REFERER')
+            $redirectPage = explode("?page=",request()->server('HTTP_REFERER'))[1];
+        } else {
+            // '?page' tidak ditemukan dalam request()->server('HTTP_REFERER')
+            return app(LoginResponse::class);
         }
     }
 

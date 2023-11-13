@@ -39,7 +39,7 @@
                    //document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                     var id = '{{$payment->id}}';
                     var url = "/update/"+id+"/success";
-
+                    window.location.href = url;
                },
                // Optional
                onPending: function(result){
@@ -47,6 +47,7 @@
                    //document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                     var id = '{{$payment->id}}';
                     var url = "/update/"+id+"/pending";
+                    window.location.href = url;
                },
                // Optional
                onError: function(result){
@@ -54,6 +55,7 @@
                    //document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
                     var id = '{{$payment->id}}';
                     var url = "/update/"+id+"/error";
+                    window.location.href = url;
                }
            });
        };

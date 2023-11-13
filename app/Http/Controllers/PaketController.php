@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Http\Controllers\Controller;
 use App\Models\About;
 use App\Models\Agent;
@@ -14,6 +15,7 @@ use App\Models\Room;
 use App\Models\Setting;
 use App\Models\Travel;
 use DateTime;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Jorenvh\Share\Share;
@@ -68,8 +70,19 @@ class PaketController extends Controller
         ];
       }
       $pageConfigs = ['myLayout' => 'horizontal'];
-      $order = Order::find($id)->first();
-      $dp = Payment::where('order_id',$order->id);
+      if($type=='cek'){
+        $payment=Payment::where('id',$id)->first();
+        $snapToken = $payment->merchant_id;
+        $order = Order::find($payment->order_id)->first();
+        $midtransId = 'TRA'.$order->id.'-'.time();
+        return view('pages.snap',[
+          'clientKey'=>\Midtrans\Config::$clientKey,
+          'snap_token'=>$snapToken,'direct'=>false,'pageConfigs'=> $pageConfigs,'profile'=>$about,'footerTitles'=>$footerTitles, 'sisa'=>0, 'order'=>$order,'payment'=>$payment
+        ]);
+      }else{
+        $order = Order::find($id)->first();
+        $midtransId = 'TRA'.$order->id.'-'.time();
+        $dp = Payment::where('order_id',$order->id);
       if($dp!==null){
         $dp = $dp->where('type','dp')->where('status','Lunas')->count();
       }else{
@@ -96,6 +109,7 @@ class PaketController extends Controller
           'user_id' => auth()->user()->id,
           'bank'  => 'Direct',
           'total_price'=> $sisa,
+          'midtrans_order_id'=> $midtransId,
           'status'=>'Menunggu Pembayaran',
           'type'=>$dporfull,
           'bukti'=>'',
@@ -108,59 +122,62 @@ class PaketController extends Controller
           'snap_token'=>$payment->merchant_id, 'direct'=>true,'pageConfigs'=> $pageConfigs,'profile'=>$about,'footerTitles'=>$footerTitles, 'sisa'=>$sisa, 'order'=>$order,'payment'=>$payment
         ]);
       }else{
-        $travel = Travel::find($order->travel_id)->first();
-        $price = Price::where('travel_id',$travel->id)->first();
-        $price_dewasa = $price->price_dewasa;
-        $price_anak = $price->price_anak;
-        $price_bayi = $price->price_bayi;
-        $item_details = [];
-        foreach($order->pesertas as $peserta){
-          $harga=0;
-          if($peserta->type=="dewasa"){
-            $harga = $price_dewasa;
-          }elseif($peserta->type=="anak"){
-            $harga = $price_anak;
-          }else{
-            $harga = $price_bayi;
+          $travel = Travel::find($order->travel_id)->first();
+          $price = Price::where('travel_id',$travel->id)->first();
+          $price_dewasa = $price->price_dewasa;
+          $price_anak = $price->price_anak;
+          $price_bayi = $price->price_bayi;
+          $item_details = [];
+          $total = $order->pesertas->count();
+          foreach($order->pesertas as $peserta){
+            $harga=0;
+            if($peserta->type=="dewasa"){
+              $harga = $price_dewasa;
+            }elseif($peserta->type=="anak"){
+              $harga = $price_anak;
+            }else{
+              $harga = $price_bayi;
+            }
+            $item_details[] = [
+              'id'            => $peserta->id,
+              'price'         => ($sisa/$total),
+              'quantity'      => 1,
+              'name'          => $peserta->name,
+              'brand'         => 'Peserta',
+              'category'      => $dporfull,
+              'merchant_name' => config('app.name'),
+            ];
           }
-          $item_details[] = [
-            'id'            => $peserta->id,
-            'price'         => $harga,
-            'quantity'      => 1,
-            'name'          => $peserta->name,
-            'brand'         => 'Peserta',
-            'category'      => 'Peserta',
-            'merchant_name' => config('app.name'),
+          $payment = Payment::create([
+            'order_id'  => $order->id,
+            'user_id' => auth()->user()->id,
+            'bank'  => 'Midtrans',
+            'total_price'=> $sisa,
+            'midtrans_order_id'=>$midtransId,
+            'status'=>'Menunggu Pembayaran',
+            'type'=>$dporfull,
+            'bukti'=>'',
+            'direct'=>0,
+            'merchant_id'=>'',
+          ]);
+          $payload = [
+              'transaction_details' => [
+                  'order_id'     => $midtransId,
+                  'gross_amount' => (string) $order->total_price,
+              ],
+              'customer_details' => [
+                  'first_name' => auth()->user()->name,
+                  'email'      => auth()->user()->email,
+              ],
+              'item_details' => $item_details,
           ];
-        }
-        $payment = Payment::create([
-          'order_id'  => $order->id,
-          'user_id' => auth()->user()->id,
-          'bank'  => 'Midtrans',
-          'total_price'=> $sisa,
-          'status'=>'Menunggu Pembayaran',
-          'type'=>'dp',
-          'bukti'=>'',
-          'direct'=>0,
-          'merchant_id'=>'',
-        ]);
-        $payload = [
-            'transaction_details' => [
-                'order_id'     => 'TRA-'.$order->id,
-                'gross_amount' => (string) $order->total_price,
-            ],
-            'customer_details' => [
-                'first_name' => auth()->user()->name,
-                'email'      => auth()->user()->email,
-            ],
-            'item_details' => $item_details,
-        ];
-        try {
-          $snapToken = \Midtrans\Snap::getSnapToken($payload);
-        }
-        catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+          try {
+            $snapToken = \Midtrans\Snap::getSnapToken($payload);
+          }
+          catch (\Exception $e) {
+              echo $e->getMessage();
+              exit();
+          }
           $payment->merchant_id = $snapToken;
           $payment->save();
           return view('pages.snap',[
@@ -168,16 +185,18 @@ class PaketController extends Controller
             'snap_token'=>$snapToken,'direct'=>false,'pageConfigs'=> $pageConfigs,'profile'=>$about,'footerTitles'=>$footerTitles, 'sisa'=>$sisa, 'order'=>$order,'payment'=>$payment
           ]);
       }
+      }
     }
     public function update($id,$status){
-      $payment = Payment::find($id)->last();
-      if($payment->direct){
+      $payment = Payment::find($id);
+      if($payment->direct>1){
         //return redirect('/post-pembayaran/'.$payment->id.'/{type}/1');
       }else{
         if($status=="success"){
           $status = "Lunas";
           $payment->status = $status;
           $order = Order::find($payment->order_id)->first();
+          $midtransId = 'TRA'.$order->id.'-'.time();
           if($payment->type=="dp"){
             $order->dp = $payment->total_price;
           }else{
@@ -187,53 +206,85 @@ class PaketController extends Controller
         }
         $payment->save();
         return redirect('/dashboard/payments/');
+
       }
     }
-    public function cek(){
-    try {
-      $notif = new \Midtrans\Notification();
-    }
-    catch (\Exception $e) {
-        exit($e->getMessage());
-    }
+    public function handleNotification()
+    {
+      $client = new Client();
+      $serverKey = \Midtrans\Config::$serverKey;
+      $auth = base64_encode($serverKey . ':');
+      $payment = Payment::where('status','Menunggu Pembayaran')->where('direct',0)->get();
+      foreach($payment as $pay){
+        $response = $client->request('GET', 'https://api.sandbox.midtrans.com/v2/' . $pay->midtrans_order_id . '/status', [
+          'headers' => [
+              'Authorization' => 'Basic ' . $auth,
+              'Accept' => 'application/json',
+          ],
+        ]);
 
-      dd($notif);
-      $transaction = $notif->transaction_status;
-      $type = $notif->payment_type;
-      $order_id = $notif->order_id;
-      $fraud = $notif->fraud_status;
+      $body = $response->getBody();
+      $content = $body->getContents();
+      $data = json_decode($body,true);
+        $transaction_status = $data['transaction_status'];
+        $order_id = $data['order_id'];
+        $payment_type = $data['payment_type'];
 
-    if ($transaction == 'capture') {
-        // For credit card transaction, we need to check whether transaction is challenge by FDS or not
-        if ($type == 'credit_card') {
-            if ($fraud == 'challenge') {
-                // TODO set payment status in merchant's database to 'Challenge by FDS'
-                // TODO merchant should decide whether this transaction is authorized or not in MAP
-                echo "Transaction order_id: " . $order_id ." is challenged by FDS";
-            } else {
-                // TODO set payment status in merchant's database to 'Success'
-                echo "Transaction order_id: " . $order_id ." successfully captured using " . $type;
-            }
+        switch ($transaction_status) {
+            case 'capture':
+                // TODO: set payment status in merchant's database to 'Success'
+                echo "Transaction order_id: " . $order_id ." successfully captured using " . $payment_type;
+                if($payment->type=='dp'){
+                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order->dp = $payment->total_price;
+                  $order->save();
+                }else{
+                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order->status = "Lunas";
+                  $order->save();
+                }
+                break;
+            case 'settlement':
+                // TODO: set payment status in merchant's database to 'Settlement'
+                echo "Transaction order_id: " . $order_id ." successfully transfered using " . $payment_type;
+                if($payment->type=='dp'){
+                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order->dp = $payment->total_price;
+                  $order->save();
+                  $payment->status = "Lunas";
+                  $payment->save();
+                }else{
+                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order->status = "Lunas";
+                  $order->save();
+                  $payment->status = "Lunas";
+                  $payment->save();
+                }
+                break;
+            case 'pending':
+                // TODO: set payment status in merchant's database to 'Pending'
+                echo "Waiting customer to finish transaction order_id: " . $order_id . " using " . $payment_type;
+                break;
+            case 'deny':
+                // TODO: set payment status in merchant's database to 'Denied'
+                echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is denied.";
+                //delete payment
+                $payment->delete();
+                break;
+            case 'expire':
+                // TODO: set payment status in merchant's database to 'expire'
+                echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is expired.";
+                $payment->delete();
+                break;
+            case 'cancel':
+                // TODO: set payment status in merchant's database to 'Denied'
+                echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is canceled.";
+                $payment->delete();
+                break;
+        }
       }
-    } else if ($transaction == 'settlement') {
-        // TODO set payment status in merchant's database to 'Settlement'
-        echo "Transaction order_id: " . $order_id ." successfully transfered using " . $type;
-    } else if ($transaction == 'pending') {
-        // TODO set payment status in merchant's database to 'Pending'
-        echo "Waiting customer to finish transaction order_id: " . $order_id . " using " . $type;
-    } else if ($transaction == 'deny') {
-        // TODO set payment status in merchant's database to 'Denied'
-        echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is denied.";
-    } else if ($transaction == 'expire') {
-        // TODO set payment status in merchant's database to 'expire'
-        echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is expired.";
-    } else if ($transaction == 'cancel') {
-        // TODO set payment status in merchant's database to 'Denied'
-        echo "Payment using " . $type . " for transaction order_id: " . $order_id . " is canceled.";
     }
-
-    }
-    function printExampleWarningMessage() {
+  function printExampleWarningMessage() {
       if (strpos(\Midtrans\Config::$serverKey, 'your ') != false ) {
           echo "<code>";
           echo "<h4>Please set your server key from sandbox</h4>";

@@ -11,6 +11,7 @@ use App\Filament\Resources\RoomResource\Pages\CreateRoom;
 use App\Filament\Resources\RoomResource\Pages\EditRoom;
 use App\Filament\Resources\RoomResource\Pages\ListRooms;
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Travel;
 use Closure;
 use Filament\Actions\Action;
@@ -25,6 +26,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action as ActionsAction;
@@ -211,14 +213,14 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('agents.name')
                     ->label('Nama Agen')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payments.dp')
-                    ->currency('IDR')
+                Tables\Columns\TextColumn::make('dp')
+                    ->currency('IDR',2)
                     ->badge('danger')
                     ->label('DP Masuk')
                     ->default(0)
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->currency('IDR')
+                    ->currency('IDR',2)
                     ->badge('success')
                     ->label('Total Harga')
                     ->sortable(),
@@ -246,12 +248,66 @@ class OrderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
-                ->label("Atur"),
+                ->label(function(){
+                  if(auth()->user()->role=='user'){
+                    return "Atur / Lihat Detail";
+                    }elseif(auth()->user()->role=='agent'){
+                      return "Lihat Detail";
+                    }else{
+                      return "Lihat Detail & Konfirmasi";
+                    };
+                  }
+                ),
                 //action buka url
                 ActionsAction::make('pay')
                 ->color('success')
-                ->label('Atur Pembayaran')
-                ->url(fn (Order $record) => route('buat-pembayaran', $record->id))
+                ->label(function (Order $record) {
+                  //where status != Lunas
+                  $payment = Payment::where('order_id', $record->id)->where('status', '!=', 'Lunas');
+                  if($payment->count()>0){
+                    return 'Lanjutkan Pembayaran';
+                  }else if($record->status=='Lunas'){
+                    return 'Lihat Pembayaran';
+                  }else{
+                    return 'Buat Pembayaran';
+                  }
+                })
+                ->url(function (Order $record){
+                  $payment = Payment::where('order_id', $record->id)->where('status', '!=', 'Lunas');
+                  if($payment->count()>0){
+                    return route('post-pembayaran', ['id' => $payment->first()->id, 'type' => 'cek', 'direct' => '0']);
+                  }else if($record->status=='Lunas'){
+                    return route('payments.list');
+                  }else{
+                    return route('buat-pembayaran', $record->id);
+                  }
+                })
+                ->hidden(function () {
+                  if(auth()->user()->role=='user'){
+                    return false;
+                  }else{
+                    return true;
+                  };
+                }),
+                ActionsAction::make('wd')
+                ->color('success')
+                ->label('Minta Dana')
+                ->action(fn (Order $record) => self::getWd($record))
+                ->hidden(function (Order $record) {
+                  if(auth()->user()->role=='agent'){
+                    if($record->status=='Lunas'){
+                      if($record->sudah_wd){
+                        return true;
+                      }else{
+                        return false;
+                      }
+                    }else{
+                      return true;
+                    }
+                  }else{
+                    return true;
+                  };
+                }),
             ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -292,5 +348,53 @@ class OrderResource extends Resource
             'pesertas.edit' =>EditPeserta::route('/{parent}/pesertas/{record}/edit'),
 
         ];
+    }
+    public static function getWd(Order $record)
+    {
+      if($record->sudah_wd){
+        //munculkan notif sudah wd
+        Notification::make()
+            ->title('Sudah Withdraw')
+            ->body('Anda sudah melakukan withdrawl sebelumnya')
+            ->danger()
+            ->send();
+      }else{
+        //cek rekening sudah diisi?
+        $bank = auth()->user()->agents->first()->bank;
+        $no_rekening = auth()->user()->agents->first()->no_rekening;
+        $nama_rekening = auth()->user()->agents->first()->nama_rekening;
+        if($bank==null or $no_rekening==null or $nama_rekening==null){
+          //munculkan notif belum isi rekening
+          Notification::make()
+              ->title('Belum Isi Rekening')
+              ->body('Silahkan isi rekening anda terlebih dahulu')
+              ->danger()
+              ->send();
+        }else{
+                  //buat payment type Penarikan Dana
+            $payment = new \App\Models\Payment;
+            $payment->order_id = $record->id;
+            $payment->type = 'penarikan';
+            $payment->user_id = auth()->user()->id;
+            $payment->bank = $bank;
+            $payment->total_price = $record->total_price;
+            $payment->status = 'Menunggu Konfirmasi';
+            $payment->direct = '1';
+            $payment->merchant_id = auth()->user()->agents->first()->id;
+            $payment->save();
+            //update order sudah_wd
+            $record->sudah_wd = true;
+            $record->save();
+            //munculkan notif berhasil
+            Notification::make()
+                ->title('Berhasil')
+                ->body('Permintaan penarikan dana berhasil')
+                ->success()
+                ->send();
+            //diarahkan ke halaman pembayaran
+            return redirect()->route('payments.list');
+        }
+
+      }
     }
 }

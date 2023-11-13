@@ -33,7 +33,9 @@ Route::get('post-pembayaran/{id}/{type}/{direct}', [PaketController::class, 'pos
 //3;
 Route::get('update/{id}/{status}', [PaketController::class, 'update'])->name('update-payment');
 //4
-Route::get('/cek', [PaketController::class, 'cek'])->name('cek');
+Route::get('/midtrans/notification', [PaketController::class, 'handleNotification']);
+//wd
+Route::get('/minta-dana', [PaketController::class, 'minta_dana'])->name('minta-dana');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/register-agent', [AuthController::class, 'register_agent'])->name('register-agent');
 
