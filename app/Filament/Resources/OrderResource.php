@@ -277,7 +277,7 @@ class OrderResource extends Resource
                   if($payment->count()>0){
                     return route('post-pembayaran', ['id' => $payment->first()->id, 'type' => 'cek', 'direct' => '0']);
                   }else if($record->status=='Lunas'){
-                    return route('payments.list');
+                    return url('/dashboard/payments');
                   }else{
                     return route('buat-pembayaran', $record->id);
                   }
@@ -391,8 +391,8 @@ class OrderResource extends Resource
                 ->body('Permintaan penarikan dana berhasil')
                 ->success()
                 ->send();
-            //diarahkan ke halaman pembayaran
-            return redirect()->route('payments.list');
+            //diarahkan ke halaman pembayaran jangan pakai route pakai url saja
+            return url('/dashboard/payments');
         }
 
       }

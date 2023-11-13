@@ -234,12 +234,12 @@ class PaketController extends Controller
             case 'capture':
                 // TODO: set payment status in merchant's database to 'Success'
                 echo "Transaction order_id: " . $order_id ." successfully captured using " . $payment_type;
-                if($payment->type=='dp'){
-                  $order = Order::where('id', '=', $payment->order_id)->first();
-                  $order->dp = $payment->total_price;
+                if($pay->type=='dp'){
+                  $order = Order::where('id', '=', $pay->order_id)->first();
+                  $order->dp = $pay->total_price;
                   $order->save();
                 }else{
-                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order = Order::where('id', '=', $pay->order_id)->first();
                   $order->status = "Lunas";
                   $order->save();
                 }
@@ -247,18 +247,18 @@ class PaketController extends Controller
             case 'settlement':
                 // TODO: set payment status in merchant's database to 'Settlement'
                 echo "Transaction order_id: " . $order_id ." successfully transfered using " . $payment_type;
-                if($payment->type=='dp'){
-                  $order = Order::where('id', '=', $payment->order_id)->first();
-                  $order->dp = $payment->total_price;
+                if($pay->type=='dp'){
+                  $order = Order::where('id', '=', $pay->order_id)->first();
+                  $order->dp = $pay->total_price;
                   $order->save();
-                  $payment->status = "Lunas";
-                  $payment->save();
+                  $pay->status = "Lunas";
+                  $pay->save();
                 }else{
-                  $order = Order::where('id', '=', $payment->order_id)->first();
+                  $order = Order::where('id', '=', $pay->order_id)->first();
                   $order->status = "Lunas";
                   $order->save();
-                  $payment->status = "Lunas";
-                  $payment->save();
+                  $pay->status = "Lunas";
+                  $pay->save();
                 }
                 break;
             case 'pending':
@@ -269,17 +269,17 @@ class PaketController extends Controller
                 // TODO: set payment status in merchant's database to 'Denied'
                 echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is denied.";
                 //delete payment
-                $payment->delete();
+                $pay->delete();
                 break;
             case 'expire':
                 // TODO: set payment status in merchant's database to 'expire'
                 echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is expired.";
-                $payment->delete();
+                $pay->delete();
                 break;
             case 'cancel':
                 // TODO: set payment status in merchant's database to 'Denied'
                 echo "Payment using " . $payment_type . " for transaction order_id: " . $order_id . " is canceled.";
-                $payment->delete();
+                $pay->delete();
                 break;
         }
       }

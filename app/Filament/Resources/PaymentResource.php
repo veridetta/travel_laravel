@@ -166,7 +166,7 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('direct')
                   ->searchable()
                   ->label('Metode Pembayaran')
-                  ->placeholder(fn (string $state): string => match ($state) {
+                  ->formatStateUsing(fn (string $state): string => match ($state) {
                     '1' => 'Direct Transfer',
                     '0' => 'Virtual Account',
                     default => 'Direct Transfer',
@@ -198,6 +198,7 @@ class PaymentResource extends Resource
                   ->formatStateUsing(fn (string $state): string => match ($state) {
                       'dp' => 'DP',
                       'full' => 'Pembayaran Penuh',
+                      'penarikan'=>'Penarikan Dana',
                       default => 'DP',
                   })
                   ->searchable()
