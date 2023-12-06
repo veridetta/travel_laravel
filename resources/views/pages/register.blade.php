@@ -31,21 +31,23 @@
   <div class="col-12 d-flex justify-content-center mt-5">
     <div class="col-md-8 p-2">
       <p class="h2 fw-bold text-center">Mengapa di {{$profile->website_name}}</p>
-      @foreach ($kelebihan as $kl)
-      <div class="d-flex row">
-        <div class="col-12 col-md-6 text-center">
+
+      <div class="d-flex col-12 row">
+        @foreach ($kelebihan as $kl)
+        <div class="col-lg-6 col-12 text-center">
           <img src="{{$profile->credentials->server.'storage/'.$kl->image}}" class="rounded me-3" height="110" width="140">
           <div class="col-12 ">
             <div class="timeline-header flex-wrap mb-2 mt-3 mt-sm-0">
               <h5 class="mb-0">{{$kl->title}}</h5>
             </div>
             <p>
-              {{$kl->description}}
+              {!!$kl->description!!}
             </p>
           </div>
         </div>
+        @endforeach
       </div>
-      @endforeach
+
       <div class="p-3 mt-4 d-flex justify-content-center">
         <a class="btn btn-warning btn-lg" href="/dashboard/register">
           <span class="align-middle text-white">DAFTAR SEKARANG</span>
