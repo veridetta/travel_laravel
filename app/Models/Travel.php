@@ -56,4 +56,9 @@ class Travel extends Model
 {
     return $this->hasMany(Peserta::class, 'travel_id');
 }
+  //user
+  public function users()
+  {
+      return $this->belongsTo(User::class, 'user_id');
+  }
 }

@@ -53,7 +53,8 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                    ->searchable()
+                    ->html(),
                 Tables\Columns\TextColumn::make('footer')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('header')

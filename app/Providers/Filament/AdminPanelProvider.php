@@ -40,6 +40,9 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Orange,
             ])
+            ->favicon(asset('storage/img/favicon.ico') )
+            ->brandLogo(fn () => view('vendor/filament/components/brand'))
+            ->brandLogoHeight('2rem')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

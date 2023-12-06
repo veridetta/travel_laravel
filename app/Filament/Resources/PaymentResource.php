@@ -17,6 +17,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PaymentResource extends Resource
@@ -163,6 +164,16 @@ class PaymentResource extends Resource
         return $table
             ->columns([
                 //direct, bank, total_price, status, type, bukti
+                //order_id
+                Tables\Columns\TextColumn::make('order_id')
+                  ->label('ID Pesanan')
+                  //ambil record dari tabel order
+                  ->formatStateUsing(function(string $state, Model $record ): string {
+                    $tanggal = $record->created_at->format('dmy');
+                    return '#TRA-'.$tanggal.'-'.$state;
+                  })
+                  ->searchable()
+                  ->sortable(),
                 Tables\Columns\TextColumn::make('direct')
                   ->searchable()
                   ->label('Metode Pembayaran')

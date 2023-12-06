@@ -53,6 +53,7 @@ class FaqResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable()
+                    ->html()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('jenis')
                     ->searchable()

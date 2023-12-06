@@ -51,7 +51,8 @@ class HowToAgentResource extends Resource
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
+                    ->searchable()
+                    ->html(),
                 Tables\Columns\TextColumn::make('order')
                     ->numeric()
                     ->sortable(),

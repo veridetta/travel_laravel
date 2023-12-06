@@ -21,6 +21,7 @@ class PromoResource extends Resource
     protected static ?string $navigationGroup = 'Financial';
     protected static ?int $navigationSort = 0;
     protected static ?string $navigationLabel="Promo & Coupon Codes";
+    protected static bool $shouldRegisterNavigation = false;
 
     public static function form(Form $form): Form
     {

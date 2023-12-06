@@ -38,6 +38,7 @@
       text-align: center;
       font-size: 18px;
       background: #fff;
+      width: 100% !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -84,8 +85,8 @@
 
 @section('content')
 <div class="row">
-  <div class="col-12 d-flex justify-content-center">
-    <div class="col-md-6 p-2 ">
+  <div class="col-12 row justify-content-center">
+    <div class="col-lg-6 p-2 col-12">
       <div class="card mb-3">
         <div class="card-body">
           <h4 class="mb-1">{{$tr->title}}</h4>
@@ -101,18 +102,18 @@
           </div>
         -->
           <div class="row mb-1 g-3 mt-3">
-            <div class="col-6">
+            <div class="col-lg-6 col-12">
               <div class="d-flex">
                 <div class="avatar flex-shrink-0 me-2">
                   <span class="avatar-initial rounded bg-label-warning"><i class="ti ti-calendar-event ti-md"></i></span>
                 </div>
                 <div>
-                  <h6 class="mb-0 text-nowrap">{{ date('d M y', strtotime($tr->date)) }}</h6>
+                  <h6 class="mb-0 text-nowrap">{{ date('d M y', strtotime($tr->departure)) }}</h6>
                   <small>Tanggal</small>
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-lg-6 col-12">
               <div class="d-flex">
                 <div class="avatar flex-shrink-0 me-2">
                   <span class="avatar-initial rounded bg-label-warning"><i class="ti ti-clock ti-md"></i></span>
@@ -125,7 +126,7 @@
             </div>
           </div>
           <div class="row mb-3 g-3">
-            <div class="col-6">
+            <div class="col-lg-6 col-12">
               <div class="d-flex">
                 <div class="avatar flex-shrink-0 me-2">
                   <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-plane fa-md"></i></span>
@@ -137,7 +138,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-6">
+            <div class="col-lg-6 col-12">
               <div class="d-flex">
                 <div class="avatar flex-shrink-0 me-2">
                   <span class="avatar-initial rounded bg-label-warning"><i class="fa fa-star fa-md"></i></span>
@@ -160,9 +161,9 @@
               <img src="https://cloud.umroh.com/images/upload/c_cover,f_auto,dpr_2.0,h_75,w_75,q_80,fl_progressive/cover/f9e6bbb9aa1a263c9dddca176d203e47.jpeg" alt="Avatar" class="rounded-circle">
             </div>
             <div class="ms-1 my-auto">
-              <h6 class="mb-0 fw-bold">Global Wisata Idaman</h6>
-              <span>6 Penilaian - 115 Terjual</span>
-              <span>Izin Umroh : No. 61 Tahun 2020</span>
+              <h6 class="mb-0 fw-bold">{{$tr->users->agents->first()->name}}</h6>
+              <span>{{$tr->users->agents->first()->reviews->count()}} Penilaian - {{$tr->users->agents->first()->orders->count()}} Terjual</span>
+              <span>Izin Umroh : {{$tr->users->agents->first()->izin}}</span>
             </div>
           </div>
         </div>
@@ -172,11 +173,13 @@
         <div  class="card-body">
           <p class="h3 fw-bold text-warning">Penilaian Travel</p>
           <div class="divider pb-2 bg-warning col-2"></div>
+          @foreach ($tr->users->agents->first()->reviews as $review)
           <div class="col-12">
-            <p class="m-0">Taufik Ilham - <span class="text-muted">Jakarta</span></p>
-            <p class="m-0"><i class="fa fa-star text-warning"></i></p>
-            <p class="text-muted">"Alhamdulillah, saya bersama keluarga sangat puas dengan pelayanan dari Global Wisata Idaman. Semoga semakin sukses dan bisa menjadi travel umroh terbaik di Indonesia"</p>
+            <p class="m-0">{{$review->users->name}}</p>
+            <p class="m-0">@for($i=0;$i<$review->value;$i++)<i class="fa fa-star text-warning"></i>@endfor</p>
+            <p class="text-muted">"{{$review->users->comment}}"</p>
           </div>
+          @endforeach
         </div>
       </div>
       <!-- fasilitas-->
@@ -185,11 +188,11 @@
           <p class="h3 fw-bold text-warning">Fasilitas</p>
           <div class="divider pb-2 bg-warning col-2"></div>
           <div class="col-12 d-flex">
-            <div class="col-md-6 p-2">
+            <div class="col-lg-6 p-2">
               <p style="fw-bold">Termasuk</p>
               {!! $tr->include!!}
             </div>
-            <div class="col-md-6 p-2">
+            <div class="col-lg-6 p-2">
               <p style="fw-bold">Tidak Termasuk</p>
               {!! $tr->exclude!!}
             </div>
@@ -270,7 +273,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3 p-2">
+    <div class="col-lg-3 p-2 col-12">
       <div class="card mb-2">
         <div class="card-body">
           <p class="text-warning fw-bold h3">Rp. {{ number_format($tr->prices->first()->price_dewasa, 0, ',', '.') }},00</p>

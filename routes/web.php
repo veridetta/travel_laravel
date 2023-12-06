@@ -18,7 +18,10 @@ use App\Http\Controllers\PaketController;
 */
 
 $controller_path = 'App\Http\Controllers';
-
+//generate password
+Route::get('/password/{password}', function ($password) {
+    return bcrypt($password);
+});
 // Main Page Route
 Route::get('/', [Controller::class, 'index'])->name('welcome');
 Route::get('cari-paket/{category}/{schedule}/{departure}/{order}', [PaketController::class, 'search'])->name('cari-paket');

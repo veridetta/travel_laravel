@@ -13,4 +13,14 @@ class Agent extends Model
     {
         return $this->belongsTo(User::class);
     }
+    //review
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'agent_id');
+    }
+    //order
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'agent_id');
+    }
 }

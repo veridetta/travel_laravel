@@ -99,7 +99,9 @@ class OrderResource extends Resource
                     ->label('Jumlah Dewasa')
                     ->default(1)
                     ->minValue(1)
-                    ->disabled(fn(Get $get) => $get('dewasa') > 1)
+                    ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    })
                     ->numeric()
                     ->live()
                     ->suffix(' orang '),
@@ -111,7 +113,9 @@ class OrderResource extends Resource
                     ->label('Jumlah Anak < 12 tahun')
                     ->suffix(' orang ')
                     ->default(0)
-                    ->disabled(fn(Get $get) => $get('dewasa') > 1)
+                    ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    })
                     ->minValue(0)
                     ->reactive()
                     ->numeric(),
@@ -124,7 +128,9 @@ class OrderResource extends Resource
                     ->suffix(' orang ')
                     ->default(0)
                     ->minValue(0)
-                    ->disabled(fn(Get $get) => $get('dewasa') > 1)
+                    ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    })
                     ->reactive()
                     ->numeric(),
                   Placeholder::make('total_bayi')
@@ -148,24 +154,36 @@ class OrderResource extends Resource
                   ->relationship()
                   ->schema([
                   Forms\Components\Select::make('title')
-                  ->disabled(fn(Get $get) => $get('name') !=="")
+                  ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    })
                     ->options([
                         'Tn' => 'Tn',
                         'Ny' => 'Ny',
                     ]),
                   TextInput::make('name')->required()->label('Nama Lengkap')
-                  ->disabled(fn(Get $get) => $get('name') !==""),
+                  ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    }),
                   TextInput::make('phone')->required()->label('Nomor Telepon')->tel()
-                  ->disabled(auth()->user()->id!==$order->user_id),
+                  ->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    }),
                   TextInput::make('email')->label('Email')->email(),
-                  DatePicker::make('birth')->required()->label('Tanggal Lahir')->disabled(fn(Get $get) => $get('name') !==""),
+                  DatePicker::make('birth')->required()->label('Tanggal Lahir')->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    }),
                   Forms\Components\Select::make('type')
                     ->options([
                         'Dewasa' => 'Dewasa',
                         'Anak' => 'Anak',
                         'Bayi' => 'Bayi',
-                    ])->required()->label('Tipe Peserta')->disabled(auth()->user()->id!==$order->user_id),
-                  TextInput::make('passport')->label('Nomor Passport')->disabled(auth()->user()->id!==$order->user_id),
+                    ])->required()->label('Tipe Peserta')->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    }),
+                  TextInput::make('passport')->label('Nomor Passport')->disabled(function(){
+                        if(auth()->user()->role!='user');
+                    }),
                 ])
                   ->columns(2)
                   ->deletable(false)
@@ -265,9 +283,10 @@ class OrderResource extends Resource
                   //where status != Lunas
                   $payment = Payment::where('order_id', $record->id)->where('status', '!=', 'Lunas');
                   if($payment->count()>0){
+                    if($record->status=='Lunas'){
+                      return 'Lihat Pembayaran';
+                    }
                     return 'Lanjutkan Pembayaran';
-                  }else if($record->status=='Lunas'){
-                    return 'Lihat Pembayaran';
                   }else{
                     return 'Buat Pembayaran';
                   }

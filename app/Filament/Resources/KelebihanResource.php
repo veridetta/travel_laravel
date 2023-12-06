@@ -48,6 +48,7 @@ class KelebihanResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('description')
                     ->searchable()
+                    ->html()
                     ->limit(50),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

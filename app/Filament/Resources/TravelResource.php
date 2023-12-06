@@ -24,6 +24,9 @@ use App\Models\Travel;
 use App\Models\TravelBanner;
 use App\Models\Hotel;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -32,6 +35,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\Layout\Grid;
 use Filament\Tables\Enums\ActionsPosition;
 use Filament\Tables\Table;
+use IbrahimBougaoua\FilamentRatingStar\Actions\RatingStar;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -118,6 +122,112 @@ class TravelResource extends Resource
                     ->label('Outclude (Fasilitas)')
                     ->required()
                     ->maxLength(255),
+                Section::make('Travel Banner')
+                    ->description('Banner yang akan ditampilkan di halaman utama')
+                    ->schema([
+                      Repeater::make('travel_banners')
+                        ->relationship()
+                        ->schema([
+                          FileUpload::make('path')
+                            ->label('Upload Gambar')
+                            ->image()
+                            ->required()
+                            ->visibility('public')
+                            ->directory('travel_banners')
+                            ->columnSpanFull(),
+                        ])
+                        ]),
+                Section::make('Harga')
+                    ->description('Masukan Paket Harga')
+                    ->schema([
+                      Repeater::make('prices')
+                        ->relationship()
+                        ->schema([
+                          Forms\Components\TextInput::make('price_dewasa')
+                              ->required()
+                              ->label('Harga Dewasa')
+                              ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
+                          Forms\Components\TextInput::make('price_anak')
+                              ->required()
+                              ->label('Harga Anak')
+                              ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
+                          Forms\Components\TextInput::make('price_bayi')
+                              ->required()
+                              ->label('Harga Bayi')
+                              ->currencyMask(thousandSeparator: '.',decimalSeparator: ',',precision: 2),
+                        ])
+                        ->maxItems(1)
+                      ]),
+                Section::make('Tambah Hotel')
+                    ->description('Masukan data Hotel yang akan digunakan')
+                    ->schema([
+                      Repeater::make('hotels')
+                        ->relationship()
+                        ->schema([
+                          Forms\Components\TextInput::make('name')
+                              ->label('Nama Hotel')
+                              ->required()
+                              ->maxLength(255),
+                          Forms\Components\TextInput::make('city')
+                              ->label('Kota')
+                              ->required()
+                              ->maxLength(255),
+                          Forms\Components\FileUpload::make('image')
+                              ->image()
+                              ->columnSpanFull()
+                              ->visibility('public')
+                              ->required(),
+                          Forms\Components\RichEditor::make('description')
+                              ->required()
+                              ->columnSpanFull(),
+                          RatingStar::make('stars')
+                              ->label('Bintang')
+                              ->columnSpanFull(),
+                          Select::make('room_type')
+                              ->label('Tipe Kamar')
+                              ->options(
+                                  [
+                                      'Single' => 'Single',
+                                      'Double' => 'Double',
+                                      'Twin' => 'Twin',
+                                      'Triple' => 'Triple',
+                                      'Quad' => 'Quad'
+                                  ],
+                              )
+                              ->required(),
+                          Forms\Components\TextInput::make('room_capacity')
+                              ->label('Kapasitas Kamar')
+                              ->required()
+                              ->numeric(),
+                        ])
+                                ]),
+                 Section::make('Buat Planning')
+                    ->description('Masukan data Planning Selama Perjalanan')
+                    ->schema([
+                      Repeater::make('plans')
+                        ->relationship()
+                        ->schema([
+                          Forms\Components\TextInput::make('day')
+                              ->required()
+                              ->numeric(),
+                          Forms\Components\RichEditor::make('title')
+                              ->label('Keterangan')
+                              ->required()
+                              ->columnSpanFull(),
+                        ])
+                        ]),
+                Section::make('Tambahkan Syarat dan Ketentuan')
+                    ->description('Masukan data Syarat dan Ketentuan')
+                    ->schema([
+                      Repeater::make('syarats')
+                        ->relationship()
+                        ->schema([
+                          Forms\Components\RichEditor::make('description')
+                          ->label('Syarat & Ketentuan')
+                          ->required()
+                          ->columnSpanFull(),
+                        ])
+                    ])
             ]);
     }
 
@@ -153,15 +263,26 @@ class TravelResource extends Resource
                 ->icon('heroicon-s-currency-dollar'),
                 Tables\Columns\TextColumn::make('departure'),
                 Tables\Columns\TextColumn::make('flight')
-                    ->searchable(),
+                    ->searchable()
+                    ->badge()
+                    ->color('primary'),
                 Tables\Columns\TextColumn::make('from')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('duration')
+                    ->formatStateUsing(function(string $state){
+                        return $state.' Hari';
+                    })
                     ->searchable(),
-                Tables\Columns\TextColumn::make('maskapai')
-                    ->badge()
-                    ->label('Maskapai')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('maskapais')
+                  ->formatStateUsing(function(string $state, Model $record) {
+                    $maskapai = Maskapai::whereIn('id', $record->maskapai)->get();
+                    $names = $maskapai->pluck('name')->join(', ');
+                    return $names;
+                  })
+                  ->badge()
+                  ->separator(',')
+                  ->label('Maskapai')
+                  ->searchable(),
                 Tables\Columns\TextColumn::make('include')
                     ->searchable()
                     ->limit(30)
@@ -184,46 +305,6 @@ class TravelResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Action::make('Tambah Banner')
-                    ->color('success')
-                    ->icon('heroicon-m-photo')
-                    ->url(
-                        fn (Travel $record): string => static::getUrl('travel-banners.index', [
-                            'parent' => $record->id,
-                        ])
-                    ),
-                Action::make('Atur Harga')
-                    ->color('primary')
-                    ->icon('heroicon-m-currency-dollar')
-                    ->url(
-                        fn (Travel $record): string => static::getUrl('prices.index', [
-                            'parent' => $record->id,
-                        ])
-                    ),
-                Action::make('Tambah Hotel')
-                    ->color('danger')
-                    ->icon('heroicon-m-building-office-2')
-                    ->url(
-                        fn (Travel $record): string => static::getUrl('hotels.index', [
-                            'parent' => $record->id,
-                        ])
-                        ),
-                Action::make('Buat Planning')
-                    ->color('primary')
-                    ->icon('heroicon-m-paper-airplane')
-                    ->url(
-                        fn (Travel $record): string => static::getUrl('plans.index', [
-                            'parent' => $record->id,
-                        ])
-                        ),
-                Action::make('Tambahkan Syarat')
-                        ->color('secondary')
-                        ->icon('heroicon-m-wrench-screwdriver')
-                        ->url(
-                            fn (Travel $record): string => static::getUrl('syarats.index', [
-                                'parent' => $record->id,
-                            ])
-                            )
             ], position: ActionsPosition::BeforeColumns)
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -245,27 +326,6 @@ class TravelResource extends Resource
             'index' => Pages\ListTravel::route('/'),
             'create' => Pages\CreateTravel::route('/create'),
             'edit' => Pages\EditTravel::route('/{record}/edit'),
-
-            //travel_banner
-            'travel-banners.index' => ListTravelBanners::route('/{parent}/travel-banners'),
-            'travel-banners.create' => CreateTravelBanner::route('/{parent}/travel-banners/create'),
-            'travel-banners.edit' =>EditTravelBanner::route('/{parent}/travel-banners/{record}/edit'),
-            //prices
-            'prices.index' => ListPrices::route('/{parent}/prices'),
-            'prices.create' => CreatePrice::route('/{parent}/prices/create'),
-            'prices.edit' =>EditPrice::route('/{parent}/prices/{record}/edit'),
-            //hotels
-            'hotels.index' => ListHotels::route('/{parent}/hotels'),
-            'hotels.create' => CreateHotel::route('/{parent}/hotels/create'),
-            'hotels.edit' =>EditHotel::route('/{parent}/hotels/{record}/edit'),
-            //plans
-            'plans.index' => ListPlans::route('/{parent}/plans'),
-            'plans.create' => CreatePlan::route('/{parent}/plans/create'),
-            'plans.edit' =>EditPlan::route('/{parent}/plans/{record}/edit'),
-            //syarats
-            'syarats.index' => ListSyarats::route('/{parent}/syarats'),
-            'syarats.create' => CreateSyarat::route('/{parent}/syarats/create'),
-            'syarats.edit' =>EditSyarat::route('/{parent}/syarats/{record}/edit'),
 
         ];
     }

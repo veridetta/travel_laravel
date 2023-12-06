@@ -25,11 +25,12 @@ class PaketController extends Controller
     //construct
     public function __construct()
     {
-      \Midtrans\Config::$serverKey    = config('services.midtrans.serverKey');
-      \Midtrans\Config::$clientKey    = config('services.midtrans.clientKey');
-      \Midtrans\Config::$isProduction = config('services.midtrans.isProduction');
-      \Midtrans\Config::$isSanitized  = config('services.midtrans.isSanitized');
-      \Midtrans\Config::$is3ds        = config('services.midtrans.is3ds');
+      //$settings = Setting::first();
+      \Midtrans\Config::$serverKey    = env('MIDTRANS_SERVER_KEY');
+      \Midtrans\Config::$clientKey    = env('MIDTRANS_CLIENT_KEY');
+      \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION');
+      \Midtrans\Config::$isSanitized  = env('MIDTRANS_IS_SANITIZED');
+      \Midtrans\Config::$is3ds        = env('MIDTRANS_IS_3DS');
     }
     public function select_pay($id){
       $about = About::first();
@@ -80,7 +81,7 @@ class PaketController extends Controller
           'snap_token'=>$snapToken,'direct'=>false,'pageConfigs'=> $pageConfigs,'profile'=>$about,'footerTitles'=>$footerTitles, 'sisa'=>0, 'order'=>$order,'payment'=>$payment
         ]);
       }else{
-        $order = Order::find($id)->first();
+        $order = Order::find($id)->where('status','!=','Lunas')->first();
         $midtransId = 'TRA'.$order->id.'-'.time();
         $dp = Payment::where('order_id',$order->id);
       if($dp!==null){
@@ -97,8 +98,10 @@ class PaketController extends Controller
         $dporfull = "full";
       }else{
         $dp = Payment::where('order_id',$order->id)->where('type','dp');
-        if($dp->count()>0){
+        if($dp->get()){
           $dp->delete();
+        }else{
+            dd('null');
         }
         $sisa = 5000000;
         $dporfull = "dp";
@@ -515,8 +518,7 @@ class PaketController extends Controller
       $order->total_price = $travel->prices->first()->price_dewasa;
       $order->status = 'Menunggu Pembayaran';
       $order->save();
-
-      return redirect('/dashboard/orders/'.$order->id.'/rooms/create');
+      return redirect('/dashboard/orders/'.$order->id.'/edit');
     }else{
       return redirect('/dashboard/login?page=paket/'.$slug)->with('error','Silahkan login terlebih dahulu');
     }

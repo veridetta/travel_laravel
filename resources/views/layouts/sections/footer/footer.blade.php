@@ -1,7 +1,7 @@
 <!-- Footer-->
 <footer class="content-footer footer bg-footer-theme">
-  <div class="d-flex">
-    <div class="col-3 p-3">
+  <div class="d-flex flex-column flex-md-row">
+    <div class="col-12 col-md-3 p-3 justify-content-center">
       <div class="d-flex">
         <img class="" height="40px" width="166px" src="{{$profile->credentials->server}}storage/{{$profile->logo}}" alt="Logo">
       </div>
@@ -24,9 +24,9 @@
         </div>
       </div>
     </div>
-    <div class="row col-9">
+    <div class="row col-12 col-md-9">
       @foreach ($footerTitles as $foot)
-      <div class="col-4 p-3">
+      <div class="col-12 col-md-4 p-3">
         <h5>{{$foot['title']}}</h5>
         <ul class="list-unstyled mb-4 mt-3">
           @foreach ($foot['pages'] as $item)
@@ -35,7 +35,7 @@
         </ul>
       </div>
       @endforeach
-      <div class="col-4 p-3">
+      <div class="col-12 col-md-4 p-3">
         <h5>Kontak:</h5>
         <ul class="list-unstyled mb-4 mt-3">
           <li class="d-flex align-items-center mb-3"><i class="ti ti-phone-call"></i><span class="fw-medium mx-2 text-heading">Telp:</span> <span>{{$profile->phone}}</span></li>

@@ -69,24 +69,28 @@ $navbarDetached = ($navbarDetached ?? '');
               <div class="dropdown-divider"></div>
             </li>
             <li>
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="{{route('filament.admin.auth.profile')}}">
                 <i class="ti ti-user-check me-2 ti-sm"></i>
                 <span class="align-middle">Akun</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="{{route('filament.admin.resources.orders.index')}}">
                 <i class="ti ti-shopping-cart me-2 ti-sm"></i>
                 <span class="align-middle">Pesanan Saya</span>
               </a>
             </li>
             <li>
-              <a class="dropdown-item" href="pages-account-settings-billing.html">
-                <span class="d-flex align-items-center align-middle">
-                  <i class="flex-shrink-0 fa fa-power-off me-2 fa-sm"></i>
-                  <span class="flex-grow-1 align-middle">Logout</span>
-                </span>
-              </a>
+
+              <form method="POST" action="{{ route('filament.admin.auth.logout') }}">
+                @csrf
+                <button type="submit" class="dropdown-item">
+                  <span class="d-flex align-items-center align-middle">
+                    <i class="flex-shrink-0 fa fa-power-off me-2 fa-sm"></i>
+                    <span class="flex-grow-1 align-middle">Logout</span>
+                  </span>
+                </button>
+              </form>
             </li>
           </ul>
           @endif

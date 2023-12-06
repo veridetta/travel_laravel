@@ -345,7 +345,7 @@
                       </div>
                     </div>
                     <p class="h4 mb-1 text-warning text-center fw-bold">{{$lebih->title}} </p>
-                    <p class="text-center">{{$lebih->description}}</p>
+                    <p class="text-center">{!!$lebih->description!!}</p>
                   </div>
                   @endforeach
                 </div>
@@ -356,6 +356,7 @@
       </div>
       <!-- /Mengapa -->
       <!-- Rekan-->
+      <!--
       <div class="col-12 row m-0 p-0">
         <div class="col-12">
           <p class="h2 fw-bold">Rekan Biro Travel Kami</p>
@@ -368,7 +369,7 @@
         <swiper-slide style="background-image:url('{{$urz}}');background-size:contain;;background-repeat:no-repeat;background-position:center"></swiper-slide>
         @endforeach
         </swiper-container>
-      </div>
+      </div>-->
       <!-- /Rekan -->
       <div class="col-md-10">
         {!!$profile->about!!}
